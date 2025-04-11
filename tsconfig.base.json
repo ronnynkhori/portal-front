@@ -14,7 +14,11 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@btc-kyc/data-access/auth": ["data-access/auth/src/index.ts"],
+      "@btc-kyc/models": ["models/src/index.ts"],
+      "@btc-kyc/ui": ["ui/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

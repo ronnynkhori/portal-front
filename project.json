@@ -1,0 +1,28 @@
+{
+  "name": "@btc-kyc-portal/source",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/source/src",
+  "targets": {
+    "build": {
+      "executor": "@nx/angular:webpack-browser",
+      "options": {
+        "outputPath": "dist/apps/source",
+        "index": "apps/source/src/index.html",
+        "main": "apps/source/src/main.ts",
+        "polyfills": "apps/source/src/polyfills.ts",
+        "tsConfig": "apps/source/tsconfig.app.json",
+        "assets": ["apps/source/src/favicon.ico", "apps/source/src/assets"],
+        "styles": ["apps/source/src/styles.css"],
+        "scripts": []
+      }
+    },
+    "serve": {
+      "executor": "@nx/angular:webpack-dev-server",
+      "options": {
+        "buildTarget": "@btc-kyc-portal/source:build"
+      }
+    }
+  },
+  "tags": []
+}

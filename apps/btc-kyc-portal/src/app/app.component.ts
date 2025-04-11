@@ -1,13 +1,14 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { NxWelcomeComponent } from './nx-welcome.component';
+import { RouterOutlet } from "@angular/router";
 
 @Component({
-  imports: [NxWelcomeComponent, RouterModule],
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css',
+  styleUrls: ['./app.component.css'],
+  standalone: true,
+  imports: [RouterOutlet, CommonModule]
 })
 export class AppComponent {
-  title = 'btc-kyc-portal';
+  title = 'BTC KYC Portal';
 }

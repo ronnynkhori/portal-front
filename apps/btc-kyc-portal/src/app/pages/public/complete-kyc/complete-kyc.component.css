@@ -1,0 +1,168 @@
+:host {
+  display: block;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+::ng-deep .mat-step-header {
+  background-color: transparent !important;
+}
+
+::ng-deep .mat-stepper-horizontal {
+  background-color: transparent !important;
+}
+
+::ng-deep .mat-form-field {
+  width: 100%;
+}
+
+::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
+  background-color: white;
+  border-radius: 4px;
+}
+
+.file-upload {
+  border: 2px dashed #ccc;
+  border-radius: 4px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+}
+
+.file-upload:hover {
+  border-color: #2196f3;
+}
+
+.file-upload input[type="file"] {
+  display: none;
+}
+
+.file-name {
+  margin-top: 8px;
+  font-size: 0.875rem;
+  color: #666;
+}
+
+::ng-deep .mat-step-icon-selected {
+  background-color: #2196f3 !important;
+}
+
+::ng-deep .mat-step-icon-state-done {
+  background-color: #4caf50 !important;
+}
+
+::ng-deep .mat-stepper-horizontal-line {
+  border-top-color: rgba(0, 0, 0, 0.12) !important;
+}
+
+/* Custom Stepper Styles */
+::ng-deep .mat-horizontal-stepper-header {
+  pointer-events: none !important;
+}
+
+::ng-deep .mat-horizontal-stepper-header-container {
+  display: none !important;
+}
+
+::ng-deep .mat-horizontal-content-container {
+  padding: 0 !important;
+}
+
+::ng-deep .mat-horizontal-stepper-content {
+  overflow: visible !important;
+}
+
+/* Custom Form Styles */
+.form-section {
+  transition: all 0.3s ease-in-out;
+}
+
+.form-section:hover {
+  transform: translateY(-2px);
+}
+
+/* Custom Button Styles */
+.btn-nav {
+  @apply transition-all duration-300;
+}
+
+.btn-nav:hover {
+  @apply transform -translate-y-0.5;
+}
+
+/* Custom Input Focus Styles */
+.input:focus, .select:focus, .file-input:focus {
+  @apply border-primary/50;
+  box-shadow: 0 0 0 4px rgba(var(--p), 0.1);
+}
+
+/* Custom Radio and Checkbox Styles */
+.radio:checked, .checkbox:checked {
+  animation: pulse 0.3s ease-in-out;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.8);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Custom Progress Steps */
+.progress-step {
+  @apply relative flex items-center justify-center;
+}
+
+.progress-step::after {
+  content: '';
+  @apply absolute h-1 bg-base-200 w-full left-1/2 top-1/2 -translate-y-1/2;
+  z-index: 0;
+}
+
+.progress-step:last-child::after {
+  display: none;
+}
+
+.progress-step-active::after {
+  @apply bg-primary;
+}
+
+/* Gradient Blob Animations */
+@keyframes float {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate(10px, 10px) rotate(5deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+}
+
+@keyframes float-reverse {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate(-10px, -10px) rotate(-5deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+}
+
+/* Apply animations to gradient blobs */
+:host ::ng-deep .gradient-blob-1 {
+  animation: float 15s ease-in-out infinite;
+}
+
+:host ::ng-deep .gradient-blob-2 {
+  animation: float-reverse 18s ease-in-out infinite;
+} 

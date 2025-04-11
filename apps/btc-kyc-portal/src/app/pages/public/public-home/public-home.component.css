@@ -1,0 +1,166 @@
+/* Animation for wave divider */
+.wave-animation {
+  animation: wave 8s ease-in-out infinite alternate;
+}
+
+@keyframes wave {
+  0% {
+    transform: translateX(-5%);
+  }
+  100% {
+    transform: translateX(5%);
+  }
+}
+
+/* Fade-in animations */
+.animate-fade-in {
+  animation: fadeIn 0.8s ease-out forwards;
+}
+
+.animate-fade-in-delay-1 {
+  opacity: 0;
+  animation: fadeIn 0.8s ease-out 0.3s forwards;
+}
+
+.animate-fade-in-delay-2 {
+  opacity: 0;
+  animation: fadeIn 0.8s ease-out 0.6s forwards;
+}
+
+.animate-fade-in-delay-3 {
+  opacity: 0;
+  animation: fadeIn 0.8s ease-out 0.9s forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Subtle pulse animation for CTA button */
+.animate-pulse-subtle {
+  animation: pulseSlow 3s infinite;
+}
+
+@keyframes pulseSlow {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+}
+
+/* Tooltip Styles */
+.tooltip-text {
+  visibility: hidden;
+  position: absolute;
+  z-index: 100;
+  width: max-content;
+  max-width: 250px;
+  background-color: rgba(55, 65, 81, 0.9);
+  color: white;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 10px;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  font-size: 0.875rem;
+  font-weight: normal;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.tooltip-text::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: rgba(55, 65, 81, 0.9) transparent transparent transparent;
+}
+
+.group:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Card Stack Styles */
+.card-stack {
+  perspective: 1000px;
+  overflow: visible;
+}
+
+.card {
+  transform-style: preserve-3d;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.stacked-active {
+  z-index: 30;
+  transform: translateX(0) scale(1);
+}
+
+.stacked-right-1 {
+  z-index: 20;
+  transform: translateX(30px) scale(0.95);
+  filter: brightness(0.9);
+}
+
+.stacked-right-2 {
+  z-index: 10;
+  transform: translateX(60px) scale(0.9);
+  filter: brightness(0.8);
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+/* Button scroll indicator */
+.button-scroll-container {
+  position: relative;
+}
+
+.button-scroll-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 30px;
+  height: 100%;
+  background: linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,0.7));
+  pointer-events: none;
+  z-index: 10;
+}
+
+@media (min-width: 768px) {
+  .button-scroll-container::after {
+    display: none;
+  }
+}
+
+/* Scroll styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #22c55e;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #15803d;
+} 
