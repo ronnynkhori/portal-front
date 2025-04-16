@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatStepperModule } from '@angular/material/stepper';
@@ -10,12 +10,19 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { Router } from '@angular/router';
 import { Subscription, timer } from 'rxjs';
+import { FooterComponent } from '../../../../../layout/src/lib/footer/footer.component';
 
 interface Step {
   id: number;
   label: string;
   description: string;
   status: 'complete' | 'active' | 'pending';
+}
+
+interface KycStatus {
+  isValid: boolean;
+  lastUpdated: Date;
+  data?: any;
 }
 
 @Component({
@@ -30,21 +37,25 @@ interface Step {
     MatButtonModule,
     MatSelectModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    FooterComponent
   ],
   templateUrl: './complete-kyc.component.html',
   styleUrls: ['./complete-kyc.component.css']
 })
-export class CompleteKycComponent implements OnDestroy {
+export class CompleteKycComponent implements OnInit, OnDestroy {
   personalInfoForm!: FormGroup;
   addressForm!: FormGroup;
   isLoading = false;
+  isCheckingKyc = true;
   otpValue = '';
   otpResendTimer = 0;
   otpTimerSubscription: Subscription = new Subscription();
   verificationId: string | null = null;
   isProcessComplete = false;
   isMetaMapComplete = false;
+  kycStatus: KycStatus | null = null;
+  showUpdateForm = false;
 
   steps: Step[] = [
     {
@@ -72,6 +83,45 @@ export class CompleteKycComponent implements OnDestroy {
     private router: Router
   ) {
     this.initializeForms();
+  }
+
+  ngOnInit(): void {
+    this.checkKycStatus();
+  }
+
+  private checkKycStatus(): void {
+    this.isCheckingKyc = true;
+    // Simulate API call to check KYC status
+    setTimeout(() => {
+      // Simulated response
+      this.kycStatus = {
+        isValid: Math.random() > 0.5, // Randomly determine if KYC is valid
+        lastUpdated: new Date(),
+        data: {
+          firstName: 'John',
+          lastName: 'Doe',
+          // ... other KYC data
+        }
+      };
+      this.isCheckingKyc = false;
+      
+      if (this.kycStatus.isValid) {
+        this.isProcessComplete = true;
+        this.steps.forEach(step => step.status = 'complete');
+      }
+    }, 2000);
+  }
+
+  startUpdateProcess(): void {
+    this.showUpdateForm = true;
+    if (this.kycStatus?.data) {
+      // Pre-fill forms with existing data
+      this.personalInfoForm.patchValue({
+        firstName: this.kycStatus.data.firstName,
+        lastName: this.kycStatus.data.lastName,
+        // ... other fields
+      });
+    }
   }
 
   private initializeForms(): void {
@@ -133,6 +183,15 @@ export class CompleteKycComponent implements OnDestroy {
         this.isLoading = false;
         this.steps[2].status = 'complete';
         this.isProcessComplete = true;
+        this.showUpdateForm = false;
+        this.kycStatus = {
+          isValid: true,
+          lastUpdated: new Date(),
+          data: {
+            ...this.personalInfoForm.value,
+            ...this.addressForm.value
+          }
+        };
       }, 2000);
     }
   }

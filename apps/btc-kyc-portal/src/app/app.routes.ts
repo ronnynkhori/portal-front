@@ -3,6 +3,7 @@ import { MainLayoutComponent } from './layout/main-layout/main-layout.component'
 import { AdminLayoutComponent } from './layout/admin-layout/admin-layout.component';
 import { AgentLayoutComponent } from './layout/agent-layout/agent-layout.component';
 import { Component } from '@angular/core';
+import { CompleteKycComponent, SimRegistrationComponent } from '@btc/kyc';
 
 // Temporary placeholder component until real ones are created
 @Component({
@@ -94,14 +95,17 @@ export const appRoutes: Route[] = [
         redirectTo: 'dashboard',
         pathMatch: 'full'
       },
-      // Use our new AgentHomeComponent for the dashboard
       {
         path: 'dashboard',
         loadComponent: () => import('./pages/agent/agent-home/agent-home.component').then(m => m.AgentHomeComponent)
       },
       {
         path: 'kyc',
-        component: PlaceholderComponent
+        component: CompleteKycComponent
+      },
+      {
+        path: 'sim-registration',
+        component: SimRegistrationComponent
       },
       {
         path: 'registration',

@@ -1,0 +1,310 @@
+/* Custom styles for the stepper */
+::ng-deep .mat-step-header {
+  padding: 24px !important;
+}
+
+::ng-deep .mat-horizontal-stepper-header {
+  pointer-events: none !important;
+}
+
+::ng-deep .mat-step-header .mat-step-icon {
+  background-color: var(--primary) !important;
+  color: white !important;
+}
+
+::ng-deep .mat-step-header .mat-step-icon-not-touched {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+  color: rgba(0, 0, 0, 0.54) !important;
+}
+
+/* Form section styles */
+.form-section {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Animation keyframes */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Gradient blob animations */
+.gradient-blob-1 {
+  animation: float1 8s ease-in-out infinite;
+}
+
+.gradient-blob-2 {
+  animation: float2 12s ease-in-out infinite;
+}
+
+@keyframes float1 {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-20px) scale(1.05);
+  }
+}
+
+@keyframes float2 {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(20px) scale(1.05);
+  }
+}
+
+/* Custom styles for Material form fields */
+::ng-deep .mat-mdc-form-field {
+  width: 100%;
+}
+
+::ng-deep .mat-mdc-form-field-appearance-outline .mat-mdc-form-field-wrapper {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+::ng-deep .mat-mdc-form-field-appearance-outline .mat-mdc-form-field-flex {
+  padding: 0 16px !important;
+  background-color: white !important;
+  border-radius: 8px !important;
+  min-height: 48px !important;
+  border: 1px solid #e5e7eb !important;
+}
+
+::ng-deep .mat-mdc-form-field-appearance-outline .mdc-notched-outline {
+  display: none !important;
+}
+
+::ng-deep .mat-mdc-form-field-appearance-outline:hover .mat-mdc-form-field-flex {
+  border-color: #d1d5db !important;
+}
+
+::ng-deep .mat-mdc-form-field-appearance-outline.mat-focused .mat-mdc-form-field-flex {
+  border-color: #15803d !important;
+  border-width: 2px !important;
+}
+
+::ng-deep .mat-mdc-form-field-appearance-outline .mat-mdc-form-field-infix {
+  padding: 12px 0 !important;
+  min-height: 48px !important;
+}
+
+::ng-deep .mat-mdc-text-field-wrapper {
+  background-color: white !important;
+}
+
+::ng-deep .mdc-text-field--outlined {
+  --mdc-outlined-text-field-container-shape: 8px !important;
+}
+
+::ng-deep .mat-mdc-form-field-error {
+  color: #ef4444 !important;
+  font-size: 12px !important;
+  margin-top: 4px !important;
+}
+
+/* Custom styles for select dropdowns */
+::ng-deep .mat-mdc-select-panel {
+  background-color: white !important;
+  border-radius: 8px !important;
+  border: 1px solid #e5e7eb !important;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important;
+}
+
+::ng-deep .mat-mdc-option {
+  min-height: 40px !important;
+}
+
+::ng-deep .mat-mdc-option:hover {
+  background-color: #f3f4f6 !important;
+}
+
+::ng-deep .mat-mdc-select-value {
+  color: #111827 !important;
+}
+
+::ng-deep .mat-mdc-select-placeholder {
+  color: #9ca3af !important;
+}
+
+::ng-deep .mat-mdc-form-field-subscript-wrapper {
+  display: none !important;
+}
+
+/* Custom styles for date picker */
+::ng-deep .mat-datepicker-toggle {
+  color: #6b7280 !important;
+}
+
+::ng-deep .mat-datepicker-toggle:hover {
+  color: #15803d !important;
+}
+
+::ng-deep .mat-calendar {
+  background-color: white !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important;
+}
+
+/* Custom styles for stepper */
+::ng-deep .mat-horizontal-stepper-header {
+  height: 72px !important;
+  pointer-events: none !important;
+}
+
+::ng-deep .mat-step-header .mat-step-icon-selected,
+::ng-deep .mat-step-header .mat-step-icon-state-done,
+::ng-deep .mat-step-header .mat-step-icon-state-edit {
+  background-color: #15803d !important;
+  color: white !important;
+}
+
+::ng-deep .mat-step-header .mat-step-icon-not-touched {
+  background-color: #f3f4f6 !important;
+  color: #6b7280 !important;
+}
+
+::ng-deep .mat-step-header .mat-step-label.mat-step-label-active {
+  color: #111827 !important;
+}
+
+::ng-deep .mat-step-header .mat-step-label {
+  color: #6b7280 !important;
+}
+
+::ng-deep .mat-stepper-horizontal-line {
+  border-top-color: #e5e7eb !important;
+}
+
+/* Animation for form transitions */
+.form-section {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f3f4f6;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+/* Input styles */
+.form-control input,
+.form-control select {
+  width: 100%;
+  height: 48px;
+  padding: 0 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background-color: white;
+  color: #111827;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.form-control input:hover,
+.form-control select:hover {
+  border-color: #d1d5db;
+}
+
+.form-control input:focus,
+.form-control select:focus {
+  outline: none;
+  border-color: #15803d;
+  border-width: 2px;
+  padding: 0 15px;
+}
+
+.form-control input::placeholder,
+.form-control select::placeholder {
+  color: #9ca3af;
+}
+
+/* Label styles */
+.form-control label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+/* Loading Spinners */
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 3px solid #15803d;
+  animation: spin 1s linear infinite;
+}
+
+.loading-spinner-sm {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 2px solid #15803d;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Snackbar styles */
+.error-snackbar {
+  background: #ef4444 !important;
+  color: white !important;
+}
+
+.success-snackbar {
+  background: #15803d !important;
+  color: white !important;
+}
+
+/* Input validation styles */
+.input-error {
+  border-color: #ef4444 !important;
+}
+
+.input-error:focus {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2) !important;
+}
+
+.text-error {
+  color: #ef4444;
+} 

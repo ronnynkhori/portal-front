@@ -1,0 +1,589 @@
+<!-- Main Container with Gradient Background -->
+<div class="min-h-screen bg-gray-50">
+  <!-- Page Loading Overlay -->
+  <div *ngIf="isLoading" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+    <div class="bg-white p-6 rounded-lg shadow-xl flex flex-col items-center">
+      <div class="loading-spinner mb-4"></div>
+      <p class="text-gray-700">Processing your registration...</p>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="bg-green-700 shadow-lg fixed top-0 left-0 right-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <img src="assets/images/btc-logo.png" alt="BTC Logo" class="h-10 w-auto" />
+          <div>
+            <h1 class="text-2xl font-semibold text-white">SIM Registration</h1>
+            <p class="text-sm text-green-100">Complete registration details</p>
+          </div>
+        </div>
+        <button (click)="goBack()" class="flex items-center gap-2 text-white hover:text-green-100 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+          </svg>
+          Back to Dashboard
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Content -->
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-24">
+    <div class="max-w-7xl mx-auto">
+      <!-- Grid Layout -->
+      <div class="flex flex-col lg:flex-row gap-8">
+        <!-- Left Column - Progress Steps -->
+        <div class="lg:w-1/4">
+          <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 lg:sticky" style="top: 6rem;">
+            <!-- Progress Steps -->
+            <div class="mb-8">
+              <h2 class="text-lg font-semibold text-gray-900 mb-4">Registration Progress</h2>
+              <div class="flex flex-col gap-6">
+                <div *ngFor="let step of steps; let i = index" 
+                     class="flex items-start gap-3 transition-all duration-300"
+                     [class.opacity-50]="(stepper?.selectedIndex || 0) < i">
+                  <div class="w-8 h-8 rounded-full flex-none flex items-center justify-center text-sm font-medium transition-all duration-300"
+                       [class.bg-green-600]="(stepper?.selectedIndex || 0) >= i"
+                       [class.text-white]="(stepper?.selectedIndex || 0) >= i"
+                       [class.bg-gray-100]="(stepper?.selectedIndex || 0) < i"
+                       [class.text-gray-500]="(stepper?.selectedIndex || 0) < i">
+                    {{i + 1}}
+                  </div>
+                  <div class="flex-1">
+                    <h3 class="text-sm font-medium" 
+                        [class.text-green-700]="(stepper?.selectedIndex || 0) >= i"
+                        [class.text-gray-900]="(stepper?.selectedIndex || 0) < i">
+                      {{step.label}}
+                    </h3>
+                    <p class="text-xs text-gray-500">{{step.description}}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Help Section -->
+            <div class="border-t border-gray-100 pt-6">
+              <h3 class="text-sm font-semibold text-gray-900 mb-3">Need Help?</h3>
+              <ul class="space-y-3 text-sm">
+                <li class="flex gap-2 items-start text-gray-600 hover:text-green-700 transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mt-0.5 flex-none text-green-600">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
+                  </svg>
+                  <span>Required fields are marked with *</span>
+                </li>
+                <li class="flex gap-2 items-start text-gray-600 hover:text-green-700 transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mt-0.5 flex-none text-green-600">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+                  </svg>
+                  <span>Ensure all documents are valid</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column - Form Steps -->
+        <div class="lg:w-3/4">
+          <!-- Mobile Progress Bar -->
+          <div class="block lg:hidden mb-6 bg-white rounded-lg shadow-sm border border-gray-100 p-4">
+            <div class="flex justify-between mb-2">
+              <span class="text-sm font-medium text-gray-900">Progress</span>
+              <span class="text-sm text-gray-500">Step {{(stepper?.selectedIndex || 0) + 1}} of {{steps.length}}</span>
+            </div>
+            <div class="w-full bg-gray-100 rounded-full h-2">
+              <div class="bg-green-600 h-2 rounded-full transition-all duration-300"
+                   [style.width]="(((stepper?.selectedIndex || 0) + 1) / steps.length * 100) + '%'"></div>
+            </div>
+          </div>
+
+          <!-- Main Form Section -->
+          <mat-stepper class="bg-white rounded-xl shadow-sm border border-gray-100" #stepper [linear]="true">
+            <!-- Personal Information Step -->
+            <mat-step [stepControl]="personalInfoForm">
+              <ng-template matStepLabel>Personal Information</ng-template>
+              <form [formGroup]="personalInfoForm" (ngSubmit)="onPersonalInfoSubmit()" class="p-8">
+                <div class="flex flex-col gap-8">
+                  <!-- Form Title -->
+                  <div class="text-center lg:text-left">
+                    <h3 class="text-xl font-semibold text-gray-900">Personal Information</h3>
+                    <p class="text-sm text-gray-500 mt-1">Please provide your basic details</p>
+                  </div>
+
+                  <!-- Form Fields Container -->
+                  <div class="flex flex-col gap-8">
+                    <!-- Name and Contact Section -->
+                    <div class="flex flex-col lg:flex-row gap-6">
+                      <div class="flex-1">
+                        <div class="form-control">
+                          <label for="firstName" class="text-sm font-medium mb-2 block text-gray-700">First Name *</label>
+                          <input type="text" id="firstName" formControlName="firstName" 
+                                 class="w-full" 
+                                 placeholder="Enter first name" />
+                        </div>
+                      </div>
+                      <div class="flex-1">
+                        <div class="form-control">
+                          <label for="lastName" class="text-sm font-medium mb-2 block text-gray-700">Last Name *</label>
+                          <input type="text" id="lastName" formControlName="lastName" 
+                                 class="w-full" 
+                                 placeholder="Enter last name" />
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Contact Information -->
+                    <div class="flex flex-col lg:flex-row gap-6">
+                      <div class="flex-1">
+                        <div class="form-control">
+                          <label for="msisdn" class="text-sm font-medium mb-2 block text-gray-700">Phone Number *</label>
+                          <div class="relative">
+                            <input type="tel" id="msisdn" formControlName="msisdn" 
+                                   class="input input-bordered h-12 w-full bg-base-100 focus:outline-primary/20 focus:outline-4" 
+                                   [class.input-error]="personalInfoForm.get('msisdn')?.errors && personalInfoForm.get('msisdn')?.touched"
+                                   placeholder="Enter phone number" />
+                            <div *ngIf="isValidatingMsisdn" class="absolute right-3 top-3">
+                              <div class="loading-spinner-sm"></div>
+                            </div>
+                          </div>
+                          <div *ngIf="personalInfoForm.get('msisdn')?.errors && personalInfoForm.get('msisdn')?.touched" 
+                               class="text-error text-sm mt-1">
+                            <span *ngIf="personalInfoForm.get('msisdn')?.errors?.['required']">Phone number is required</span>
+                            <span *ngIf="personalInfoForm.get('msisdn')?.errors?.['pattern']">Invalid phone number format</span>
+                            <span *ngIf="personalInfoForm.get('msisdn')?.errors?.['invalid']">Phone number is invalid or already registered</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="flex-1">
+                        <div class="form-control">
+                          <label for="alternativePhone" class="text-sm font-medium mb-2 block text-gray-700">Alternative Phone</label>
+                          <input type="tel" id="alternativePhone" formControlName="alternativePhone" 
+                                 class="w-full" 
+                                 placeholder="Enter alternative phone" />
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Additional Information -->
+                    <div class="flex flex-col lg:flex-row gap-6">
+                      <div class="flex-1">
+                        <div class="form-control">
+                          <label for="emailAddress" class="text-sm font-medium mb-2 block text-gray-700">Email Address</label>
+                          <input type="email" id="emailAddress" formControlName="emailAddress" 
+                                 class="w-full" 
+                                 placeholder="Enter email address" />
+                        </div>
+                      </div>
+                      <div class="flex-1">
+                        <div class="form-control">
+                          <label for="company" class="text-sm font-medium mb-2 block text-gray-700">Company (Optional)</label>
+                          <input type="text" id="company" formControlName="company" 
+                                 class="w-full" 
+                                 placeholder="Enter company name" />
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Personal Details -->
+                    <div class="flex flex-col lg:flex-row gap-6">
+                      <div class="flex-1">
+                        <div class="form-control">
+                          <label for="gender" class="text-sm font-medium mb-2 block text-gray-700">Gender *</label>
+                          <select id="gender" formControlName="gender" class="w-full">
+                            <option value="">Select gender</option>
+                            <option value="MALE">Male</option>
+                            <option value="FEMALE">Female</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="flex-1">
+                        <div class="form-control">
+                          <label for="dateOfBirth" class="text-sm font-medium mb-2 block text-gray-700">Date of Birth *</label>
+                          <mat-form-field class="w-full">
+                            <input matInput [matDatepicker]="picker" id="dateOfBirth" formControlName="dateOfBirth"
+                                   placeholder="YYYY-MM-DD">
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Next of Kin -->
+                    <div class="flex flex-col lg:flex-row gap-6">
+                      <div class="flex-1">
+                        <div class="form-control">
+                          <label for="nextOfKin" class="text-sm font-medium mb-2 block text-gray-700">Next of Kin</label>
+                          <input type="text" id="nextOfKin" formControlName="nextOfKin" 
+                                 class="w-full" 
+                                 placeholder="Enter next of kin name" />
+                        </div>
+                      </div>
+                      <div class="flex-1">
+                        <div class="form-control">
+                          <label for="nextOfKinPhone" class="text-sm font-medium mb-2 block text-gray-700">Next of Kin Phone</label>
+                          <input type="tel" id="nextOfKinPhone" formControlName="nextOfKinPhone" 
+                                 class="w-full" 
+                                 placeholder="Enter next of kin phone" />
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Nationality -->
+                    <div class="form-control">
+                      <label for="nationality" class="text-sm font-medium mb-2 block text-gray-700">Nationality *</label>
+                      <select id="nationality" formControlName="nationality" class="w-full">
+                        <option value="">Select nationality</option>
+                        <option value="Botswana">Botswana</option>
+                        <option value="Other">Other</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <!-- Navigation Buttons -->
+                  <div class="flex justify-end mt-8">
+                    <button type="submit" 
+                            class="flex items-center justify-center gap-2 px-8 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed min-w-[200px]" 
+                            [disabled]="!personalInfoForm.valid">
+                      <span class="flex items-center gap-2">
+                        Continue to Address
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                        </svg>
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </mat-step>
+
+            <!-- Address Step -->
+            <mat-step [stepControl]="addressForm">
+              <ng-template matStepLabel>Address Details</ng-template>
+              <form [formGroup]="addressForm" (ngSubmit)="onAddressSubmit()" class="p-6 form-section">
+                <div class="space-y-6">
+                  <!-- Form Title -->
+                  <div class="text-center lg:text-left">
+                    <h3 class="text-xl font-medium">Address Information</h3>
+                    <p class="text-sm text-base-content/60 mt-1">Please provide your address details</p>
+                  </div>
+
+                  <!-- Form Fields -->
+                  <div class="grid gap-6">
+                    <!-- Plot and Street -->
+                    <div class="grid sm:grid-cols-2 gap-4">
+                      <div class="form-control w-full">
+                        <label for="plotNumber" class="text-sm font-medium mb-2 block">Plot Number *</label>
+                        <input type="text" id="plotNumber" formControlName="plotNumber" 
+                               class="input input-bordered h-12 w-full bg-base-100 focus:outline-primary/20 focus:outline-4" 
+                               placeholder="Enter plot number" />
+                      </div>
+                      <div class="form-control w-full">
+                        <label for="street" class="text-sm font-medium mb-2 block">Street</label>
+                        <input type="text" id="street" formControlName="street" 
+                               class="input input-bordered h-12 w-full bg-base-100 focus:outline-primary/20 focus:outline-4" 
+                               placeholder="Enter street name" />
+                      </div>
+                    </div>
+
+                    <!-- City and Town -->
+                    <div class="grid sm:grid-cols-2 gap-4">
+                      <div class="form-control w-full">
+                        <label for="cityTownVillage" class="text-sm font-medium mb-2 block">Town/Village *</label>
+                        <input type="text" id="cityTownVillage" formControlName="cityTownVillage" 
+                               class="input input-bordered h-12 w-full bg-base-100 focus:outline-primary/20 focus:outline-4" 
+                               placeholder="Enter town or village" />
+                      </div>
+                      <div class="form-control w-full">
+                        <label for="city" class="text-sm font-medium mb-2 block">City *</label>
+                        <input type="text" id="city" formControlName="city" 
+                               class="input input-bordered h-12 w-full bg-base-100 focus:outline-primary/20 focus:outline-4" 
+                               placeholder="Enter city" />
+                      </div>
+                    </div>
+
+                    <!-- Additional Address Info -->
+                    <div class="grid sm:grid-cols-2 gap-4">
+                      <div class="form-control w-full">
+                        <label for="billAddress4" class="text-sm font-medium mb-2 block">Additional Address Info</label>
+                        <input type="text" id="billAddress4" formControlName="billAddress4" 
+                               class="input input-bordered h-12 w-full bg-base-100 focus:outline-primary/20 focus:outline-4" 
+                               placeholder="Enter additional address info" />
+                      </div>
+                      <div class="form-control w-full">
+                        <label for="zipCode" class="text-sm font-medium mb-2 block">ZIP Code</label>
+                        <input type="text" id="zipCode" formControlName="zipCode" 
+                               class="input input-bordered h-12 w-full bg-base-100 focus:outline-primary/20 focus:outline-4" 
+                               placeholder="Enter ZIP code" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4">
+                  <button type="button" 
+                          class="flex items-center gap-2 px-6 py-2.5 border border-gray-200 rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-colors" 
+                          mat-button matStepperPrevious>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                    </svg>
+                    Back
+                  </button>
+                  <button type="submit" 
+                          class="flex items-center justify-center gap-2 px-6 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" 
+                          [disabled]="!addressForm.valid">
+                    <span class="flex items-center gap-2">
+                      <span class="loading loading-spinner loading-xs" *ngIf="isLoading"></span>
+                      <span>Continue to Identification</span>
+                    </span>
+                  </button>
+                </div>
+              </form>
+            </mat-step>
+
+            <!-- Identification Step -->
+            <mat-step [stepControl]="identificationForm">
+              <ng-template matStepLabel>Identification</ng-template>
+              <form [formGroup]="identificationForm" (ngSubmit)="onIdentificationSubmit()" class="p-6 form-section">
+                <div class="space-y-6">
+                  <!-- Form Title -->
+                  <div class="text-center lg:text-left">
+                    <h3 class="text-xl font-medium">Identification Details</h3>
+                    <p class="text-sm text-base-content/60 mt-1">Please provide your identification details</p>
+                  </div>
+
+                  <!-- Form Fields -->
+                  <div class="grid gap-6">
+                    <!-- ID Type -->
+                    <div class="form-control w-full">
+                      <label for="idType" class="text-sm font-medium mb-2 block">ID Type *</label>
+                      <select id="idType" formControlName="idType" 
+                              class="select select-bordered h-12 w-full bg-base-100 focus:outline-primary/20 focus:outline-4">
+                        <option value="">Select ID type</option>
+                        <option value="NATIONAL_ID">National ID</option>
+                        <option value="PASSPORT">Passport</option>
+                      </select>
+                    </div>
+
+                    <!-- ID Number -->
+                    <div class="form-control w-full">
+                      <label for="idNumber" class="text-sm font-medium mb-2 block text-gray-700">ID Number *</label>
+                      <div class="relative">
+                        <input type="text" id="idNumber" formControlName="idNumber" 
+                               class="input input-bordered h-12 w-full bg-base-100 focus:outline-primary/20 focus:outline-4" 
+                               [class.input-error]="identificationForm.get('idNumber')?.errors && identificationForm.get('idNumber')?.touched"
+                               placeholder="Enter ID number" />
+                        <div *ngIf="isValidatingId" class="absolute right-3 top-3">
+                          <div class="loading-spinner-sm"></div>
+                        </div>
+                      </div>
+                      <div *ngIf="identificationForm.get('idNumber')?.errors && identificationForm.get('idNumber')?.touched" 
+                           class="text-error text-sm mt-1">
+                        <span *ngIf="identificationForm.get('idNumber')?.errors?.['required']">ID number is required</span>
+                        <span *ngIf="identificationForm.get('idNumber')?.errors?.['invalid']">ID number is invalid or already registered</span>
+                      </div>
+                    </div>
+
+                    <!-- ID Dates -->
+                    <div class="grid sm:grid-cols-2 gap-4">
+                      <div class="form-control w-full">
+                        <label for="idIssueDate" class="text-sm font-medium mb-2 block">Issue Date *</label>
+                        <input matInput [matDatepicker]="issuePicker" id="idIssueDate" formControlName="idIssueDate"
+                               class="input input-bordered h-12 w-full bg-base-100 focus:outline-primary/20 focus:outline-4"
+                               placeholder="YYYY-MM-DD">
+                        <mat-datepicker-toggle matSuffix [for]="issuePicker"></mat-datepicker-toggle>
+                        <mat-datepicker #issuePicker></mat-datepicker>
+                      </div>
+                      <div class="form-control w-full">
+                        <label for="idExpiryDate" class="text-sm font-medium mb-2 block">Expiry Date *</label>
+                        <input matInput [matDatepicker]="expiryPicker" id="idExpiryDate" formControlName="idExpiryDate"
+                               class="input input-bordered h-12 w-full bg-base-100 focus:outline-primary/20 focus:outline-4"
+                               placeholder="YYYY-MM-DD">
+                        <mat-datepicker-toggle matSuffix [for]="expiryPicker"></mat-datepicker-toggle>
+                        <mat-datepicker #expiryPicker></mat-datepicker>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4">
+                  <button type="button" 
+                          class="flex items-center gap-2 px-6 py-2.5 border border-gray-200 rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-colors" 
+                          mat-button matStepperPrevious>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                    </svg>
+                    Back
+                  </button>
+                  <button type="submit" 
+                          class="flex items-center justify-center gap-2 px-6 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" 
+                          [disabled]="!identificationForm.valid">
+                    <span class="flex items-center gap-2">
+                      <span class="loading loading-spinner loading-xs" *ngIf="isLoading"></span>
+                      <span>Continue to Permits</span>
+                    </span>
+                  </button>
+                </div>
+              </form>
+            </mat-step>
+
+            <!-- Permits Step -->
+            <mat-step [stepControl]="permitForm">
+              <ng-template matStepLabel>Permits</ng-template>
+              <form [formGroup]="permitForm" (ngSubmit)="onPermitSubmit()" class="p-6 form-section">
+                <div class="space-y-6">
+                  <!-- Form Title -->
+                  <div class="text-center lg:text-left">
+                    <h3 class="text-xl font-medium">Permit Information</h3>
+                    <p class="text-sm text-base-content/60 mt-1">
+                      <ng-container *ngIf="isNonCitizen">Please provide your permit details</ng-container>
+                      <ng-container *ngIf="!isNonCitizen">This section is optional for citizens</ng-container>
+                    </p>
+                  </div>
+
+                  <!-- Form Fields -->
+                  <div class="grid gap-6">
+                    <!-- Residence Permit -->
+                    <div class="grid sm:grid-cols-3 gap-4">
+                      <div class="form-control w-full">
+                        <label for="residencePermitNo" class="text-sm font-medium mb-2 block">
+                          Residence Permit Number
+                          <span *ngIf="isNonCitizen" class="text-error">*</span>
+                        </label>
+                        <input type="text" id="residencePermitNo" formControlName="residencePermitNo" 
+                               class="input input-bordered h-12 w-full bg-base-100 focus:outline-primary/20 focus:outline-4" 
+                               placeholder="Enter permit number" />
+                      </div>
+                      <div class="form-control w-full">
+                        <label for="residencePermitDateOfIssue" class="text-sm font-medium mb-2 block">
+                          Issue Date
+                          <span *ngIf="isNonCitizen" class="text-error">*</span>
+                        </label>
+                        <input matInput [matDatepicker]="resIssuePicker" id="residencePermitDateOfIssue" 
+                               formControlName="residencePermitDateOfIssue"
+                               class="input input-bordered h-12 w-full bg-base-100 focus:outline-primary/20 focus:outline-4"
+                               placeholder="YYYY-MM-DD">
+                        <mat-datepicker-toggle matSuffix [for]="resIssuePicker"></mat-datepicker-toggle>
+                        <mat-datepicker #resIssuePicker></mat-datepicker>
+                      </div>
+                      <div class="form-control w-full">
+                        <label for="residencePermitDateOfExpiry" class="text-sm font-medium mb-2 block">
+                          Expiry Date
+                          <span *ngIf="isNonCitizen" class="text-error">*</span>
+                        </label>
+                        <input matInput [matDatepicker]="resExpiryPicker" id="residencePermitDateOfExpiry" 
+                               formControlName="residencePermitDateOfExpiry"
+                               class="input input-bordered h-12 w-full bg-base-100 focus:outline-primary/20 focus:outline-4"
+                               placeholder="YYYY-MM-DD">
+                        <mat-datepicker-toggle matSuffix [for]="resExpiryPicker"></mat-datepicker-toggle>
+                        <mat-datepicker #resExpiryPicker></mat-datepicker>
+                      </div>
+                    </div>
+
+                    <!-- Work Permit -->
+                    <div class="grid sm:grid-cols-3 gap-4">
+                      <div class="form-control w-full">
+                        <label for="workPermitNo" class="text-sm font-medium mb-2 block">
+                          Work Permit Number
+                          <span *ngIf="isNonCitizen" class="text-error">*</span>
+                        </label>
+                        <input type="text" id="workPermitNo" formControlName="workPermitNo" 
+                               class="input input-bordered h-12 w-full bg-base-100 focus:outline-primary/20 focus:outline-4" 
+                               placeholder="Enter permit number" />
+                      </div>
+                      <div class="form-control w-full">
+                        <label for="workPermitDateOfIssue" class="text-sm font-medium mb-2 block">
+                          Issue Date
+                          <span *ngIf="isNonCitizen" class="text-error">*</span>
+                        </label>
+                        <input matInput [matDatepicker]="workIssuePicker" id="workPermitDateOfIssue" 
+                               formControlName="workPermitDateOfIssue"
+                               class="input input-bordered h-12 w-full bg-base-100 focus:outline-primary/20 focus:outline-4"
+                               placeholder="YYYY-MM-DD">
+                        <mat-datepicker-toggle matSuffix [for]="workIssuePicker"></mat-datepicker-toggle>
+                        <mat-datepicker #workIssuePicker></mat-datepicker>
+                      </div>
+                      <div class="form-control w-full">
+                        <label for="workPermitDateOfExpiry" class="text-sm font-medium mb-2 block">
+                          Expiry Date
+                          <span *ngIf="isNonCitizen" class="text-error">*</span>
+                        </label>
+                        <input matInput [matDatepicker]="workExpiryPicker" id="workPermitDateOfExpiry" 
+                               formControlName="workPermitDateOfExpiry"
+                               class="input input-bordered h-12 w-full bg-base-100 focus:outline-primary/20 focus:outline-4"
+                               placeholder="YYYY-MM-DD">
+                        <mat-datepicker-toggle matSuffix [for]="workExpiryPicker"></mat-datepicker-toggle>
+                        <mat-datepicker #workExpiryPicker></mat-datepicker>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4">
+                  <button type="button" 
+                          class="flex items-center gap-2 px-6 py-2.5 border border-gray-200 rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-colors" 
+                          mat-button matStepperPrevious>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                    </svg>
+                    Back
+                  </button>
+                  <button type="submit" 
+                          class="flex items-center justify-center gap-2 px-6 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" 
+                          [disabled]="!permitForm.valid || isLoading">
+                    <span class="flex items-center gap-2">
+                      <span class="loading-spinner-sm" *ngIf="isLoading"></span>
+                      <span>Complete Registration</span>
+                    </span>
+                  </button>
+                </div>
+              </form>
+            </mat-step>
+          </mat-stepper>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-footer></app-footer>
+
+<!-- Add these styles to your CSS file -->
+<style>
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 3px solid #15803d;
+  animation: spin 1s linear infinite;
+}
+
+.loading-spinner-sm {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 2px solid #15803d;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.error-snackbar {
+  background: #ef4444 !important;
+  color: white !important;
+}
+
+.success-snackbar {
+  background: #15803d !important;
+  color: white !important;
+}
+</style>

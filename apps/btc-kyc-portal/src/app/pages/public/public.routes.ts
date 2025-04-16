@@ -1,4 +1,6 @@
 import { Route } from '@angular/router';
+import { CompleteKycComponent } from '@btc/kyc';
+import { SimRegistrationComponent } from '@btc/kyc';
 
 
 export const publicRoutes: Route[] = [
@@ -8,12 +10,11 @@ export const publicRoutes: Route[] = [
   },
   {
     path: 'complete-kyc',
-    loadComponent: () => import('./complete-kyc/complete-kyc.component').then(m => m.CompleteKycComponent)
+    component: CompleteKycComponent
   },
   {
     path: 'sim-registration',
-    loadComponent: () => import('./public-home/public-home.component').then(m => m.PublicHomeComponent)
-    // Will be replaced with actual component when developed
+    component: SimRegistrationComponent
   },
   {
     path: 'number-transfer',

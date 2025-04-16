@@ -17,7 +17,10 @@
     "paths": {
       "@btc-kyc/data-access/auth": ["data-access/auth/src/index.ts"],
       "@btc-kyc/models": ["models/src/index.ts"],
-      "@btc-kyc/ui": ["ui/src/index.ts"]
+      "@btc-kyc/ui": ["ui/src/index.ts"],
+      "@btc/kyc": ["libs/shared/kyc/src/index.ts"],
+      "@btc/shared/layout": ["libs/shared/layout/src/index.ts"],
+      "@btc/shared/environment": ["libs/shared/environment/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
