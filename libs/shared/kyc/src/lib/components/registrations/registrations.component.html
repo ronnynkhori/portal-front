@@ -1,0 +1,195 @@
+<div class="flex flex-col min-h-screen bg-base-100">
+  <!-- Header -->
+  <header class="bg-green-700 shadow-lg fixed top-0 left-0 right-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <img src="https://btc.bw/wp-content/uploads/2020/08/btc-logo.png" alt="BTC Logo" class="h-10 w-auto" />
+          <div>
+            <h1 class="text-2xl font-semibold text-white">Registrations</h1>
+            <p class="text-sm text-green-100">View and manage registrations</p>
+          </div>
+        </div>
+        <button (click)="goBack()" class="flex items-center gap-2 text-white hover:text-green-100 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+          </svg>
+          Back to Dashboard
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-24">
+    <!-- Statistics Section -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+      <!-- Total Registrations -->
+      <div class="bg-white rounded-lg shadow p-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm text-gray-500">Total Registrations</p>
+            <h3 class="text-2xl font-bold text-gray-900">{{ registrationStats.total }}</h3>
+          </div>
+          <div class="bg-blue-100 p-3 rounded-full">
+            <i data-feather="users" class="h-6 w-6 text-blue-600"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Successful Registrations -->
+      <div class="bg-white rounded-lg shadow p-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm text-gray-500">Successful</p>
+            <h3 class="text-2xl font-bold text-green-600">{{ registrationStats.successful }}</h3>
+          </div>
+          <div class="bg-green-100 p-3 rounded-full">
+            <i data-feather="check-circle" class="h-6 w-6 text-green-600"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Failed Registrations -->
+      <div class="bg-white rounded-lg shadow p-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm text-gray-500">Failed</p>
+            <h3 class="text-2xl font-bold text-red-600">{{ registrationStats.failed }}</h3>
+          </div>
+          <div class="bg-red-100 p-3 rounded-full">
+            <i data-feather="x-circle" class="h-6 w-6 text-red-600"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pending Registrations -->
+      <div class="bg-white rounded-lg shadow p-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm text-gray-500">Pending</p>
+            <h3 class="text-2xl font-bold text-yellow-600">{{ registrationStats.pending }}</h3>
+          </div>
+          <div class="bg-yellow-100 p-3 rounded-full">
+            <i data-feather="clock" class="h-6 w-6 text-yellow-600"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Existing Registrations Table -->
+    <div class="bg-base-100 rounded-box shadow-sm border border-base-200 p-6">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-lg font-semibold text-gray-900">Registrations</h2>
+        <div class="search-filter-container">
+          <div class="relative search-input">
+            <input
+              type="text"
+              placeholder="Search registrations..."
+              class="input input-bordered h-12 w-full bg-base-100 focus:outline-primary/20 focus:outline-4"
+              (input)="applyFilter($event)"
+            />
+            <i data-feather="search" class="absolute right-3 top-3 h-6 w-6 text-gray-400"></i>
+          </div>
+          <select
+            class="status-filter input input-bordered h-12 bg-base-100 focus:outline-primary/20 focus:outline-4"
+            (change)="filterByStatus($event)"
+          >
+            <option value="">All Status</option>
+            <option value="completed">Completed</option>
+            <option value="pending">Pending</option>
+            <option value="failed">Failed</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table mat-table [dataSource]="dataSource" matSort class="w-full">
+          <!-- SIM Number Column -->
+          <ng-container matColumnDef="simNumber">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-header">SIM Number</th>
+            <td mat-cell *matCellDef="let element" class="table-cell">{{ element.simNumber }}</td>
+          </ng-container>
+
+          <!-- Customer Name Column -->
+          <ng-container matColumnDef="customerName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-header">Customer Name</th>
+            <td mat-cell *matCellDef="let element" class="table-cell">{{ element.customerName }}</td>
+          </ng-container>
+
+          <!-- Customer ID Column -->
+          <ng-container matColumnDef="customerId">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-header">Customer ID</th>
+            <td mat-cell *matCellDef="let element" class="table-cell">{{ element.customerId }}</td>
+          </ng-container>
+
+          <!-- Phone Number Column -->
+          <ng-container matColumnDef="phoneNumber">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-header">Phone Number</th>
+            <td mat-cell *matCellDef="let element" class="table-cell">{{ element.phoneNumber }}</td>
+          </ng-container>
+
+          <!-- Status Column -->
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-header">Status</th>
+            <td mat-cell *matCellDef="let element" class="table-cell">
+              <span [class]="'status-badge ' + getStatusClass(element.status)">
+                {{ element.status | titlecase }}
+              </span>
+            </td>
+          </ng-container>
+
+          <!-- Registration Date Column -->
+          <ng-container matColumnDef="registrationDate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-header">Registration Date</th>
+            <td mat-cell *matCellDef="let element" class="table-cell">{{ element.registrationDate | date:'mediumDate' }}</td>
+          </ng-container>
+
+          <!-- Last Updated Column -->
+          <ng-container matColumnDef="lastUpdated">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-header">Last Updated</th>
+            <td mat-cell *matCellDef="let element" class="table-cell">{{ element.lastUpdated | date:'mediumDate' }}</td>
+          </ng-container>
+
+          <!-- Actions Column -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef class="table-header">Actions</th>
+            <td mat-cell *matCellDef="let element" class="table-cell">
+              <div class="flex items-center gap-2">
+                <button mat-icon-button [matMenuTriggerFor]="menu" class="action-button">
+                  <i data-feather="more-vertical" class="h-5 w-5"></i>
+                </button>
+                <mat-menu #menu="matMenu">
+                  <button mat-menu-item (click)="viewDetails(element)">
+                    <i data-feather="eye" class="h-4 w-4 mr-2"></i>
+                    <span>View Details</span>
+                  </button>
+                  <button mat-menu-item (click)="editRegistration(element)">
+                    <i data-feather="edit" class="h-4 w-4 mr-2"></i>
+                    <span>Edit</span>
+                  </button>
+                  <button mat-menu-item (click)="deleteRegistration(element)">
+                    <i data-feather="trash" class="h-4 w-4 mr-2"></i>
+                    <span>Delete</span>
+                  </button>
+                </mat-menu>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns" class="table-row"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="table-row"></tr>
+        </table>
+
+        <mat-paginator 
+          [pageSize]="10" 
+          [pageSizeOptions]="[5, 10, 25, 100]" 
+          aria-label="Select page of registrations"
+          class="paginator">
+        </mat-paginator>
+      </div>
+    </div>
+  </main>
+
+  <app-footer></app-footer>
+</div> 

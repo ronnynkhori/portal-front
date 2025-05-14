@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '@btc/shared/environment';
-import { Subscriber } from '../components/sim-registration/sim-registration.component';
+import {Subscriber} from "../models/kyc.models";
+
 
 @Injectable({
   providedIn: 'root'
@@ -23,4 +24,4 @@ export class SimRegistrationService {
   validateIdNumber(idNumber: string, idType: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/validate-id`, { idNumber, idType });
   }
-} 
+}

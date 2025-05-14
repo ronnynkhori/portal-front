@@ -3,7 +3,7 @@ import { MainLayoutComponent } from './layout/main-layout/main-layout.component'
 import { AdminLayoutComponent } from './layout/admin-layout/admin-layout.component';
 import { AgentLayoutComponent } from './layout/agent-layout/agent-layout.component';
 import { Component } from '@angular/core';
-import { CompleteKycComponent, SimRegistrationComponent } from '@btc/kyc';
+import { CompleteKycComponent, RegistrationsComponent, ReportsComponent, SimRegistrationComponent, SimTransferComponent } from '@btc/kyc';
 
 // Temporary placeholder component until real ones are created
 @Component({
@@ -107,13 +107,18 @@ export const appRoutes: Route[] = [
         path: 'sim-registration',
         component: SimRegistrationComponent
       },
+ 
       {
-        path: 'registration',
-        component: PlaceholderComponent
+        path: 'sim-transfer',
+        component: SimTransferComponent
       },
       {
-        path: 'transfer',
-        component: PlaceholderComponent
+        path: 'reports',
+        component: ReportsComponent
+      },
+      {
+        path: 'registrations',
+        component: RegistrationsComponent
       }
     ]
   },

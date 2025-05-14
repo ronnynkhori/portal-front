@@ -181,4 +181,16 @@ export class AgentHomeComponent implements OnInit, AfterViewInit {
   startSimRegistration(): void {
     this.router.navigate(['/agent/sim-registration']);
   }
+
+  startSimTransfer(): void {
+    this.router.navigate(['/agent/sim-transfer']);
+  }
+
+  viewRegistrations(): void {
+    this.router.navigate(['/agent/registrations']);
+  }
+
+  generateReport(): void {
+    this.router.navigate(['/agent/reports']);
+  }
 } 

@@ -1,0 +1,349 @@
+<div class="min-h-screen bg-gray-50">
+  <!-- Page Loading Overlay -->
+  <div *ngIf="isLoading" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+    <div class="bg-white p-6 rounded-lg shadow-xl flex flex-col items-center">
+      <div class="loading-spinner mb-4"></div>
+      <p class="text-gray-700">Processing your report...</p>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="bg-green-700 shadow-lg fixed top-0 left-0 right-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <img src="https://btc.bw/wp-content/uploads/2020/08/btc-logo.png" alt="BTC Logo" class="h-10 w-auto" />
+          <div>
+            <h1 class="text-2xl font-semibold text-white">Reports Dashboard</h1>
+            <p class="text-sm text-green-100">Generate and manage your reports</p>
+          </div>
+        </div>
+        <button (click)="goBack()" class="flex items-center gap-2 text-white hover:text-green-100 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+          </svg>
+          Back to Dashboard
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-24">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Report Generation Form -->
+      <div class="lg:col-span-2">
+        <div class="bg-base-100 rounded-box shadow-lg border border-base-200 p-8">
+          <div class="flex items-center justify-between mb-8">
+            <div>
+              <h2 class="text-2xl font-bold text-base-content">Generate Report</h2>
+              <p class="text-base-content/70 mt-1">Select your report type and customize the parameters</p>
+            </div>
+            <div class="badge badge-primary badge-lg">New</div>
+          </div>
+          
+          <form [formGroup]="reportForm" (ngSubmit)="generateReport()" class="space-y-8">
+            <!-- Report Type -->
+            <div class="card bg-base-200 p-4 hover:bg-base-300 transition-colors">
+              <div class="card-body p-0">
+                <label class="label">
+                  <span class="label-text font-medium">Report Type</span>
+                </label>
+                <div class="form-control">
+                  <select formControlName="reportType" class="select select-bordered h-12 w-full bg-base-100 focus:outline-primary/20 focus:outline-4">
+                    <option value="">Select a report type</option>
+                    <option *ngFor="let type of reportTypes" [value]="type.value">
+                      {{ type.label }}
+                      <span *ngIf="type.isAdminOnly">(Admin Only)</span>
+                    </option>
+                  </select>
+                </div>
+                <div class="text-sm text-base-content/70 mt-2">
+                  <i data-feather="info" class="h-4 w-4 inline-block mr-1"></i>
+                  Choose the type of report you want to generate
+                </div>
+              </div>
+            </div>
+
+            <!-- Date Range (shown only for custom type) -->
+            <div *ngIf="reportForm.get('reportType')?.value === 'custom'" class="space-y-4">
+              <!-- Quick Presets -->
+              <div class="flex flex-wrap gap-2">
+                <button type="button" 
+                        *ngFor="let preset of datePresets" 
+                        (click)="applyDatePreset(preset)"
+                        class="btn btn-sm btn-outline gap-2">
+                  <i data-feather="calendar" class="h-4 w-4"></i>
+                  {{ preset.label }}
+                </button>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="card bg-base-200 p-4 hover:bg-base-300 transition-colors">
+                  <div class="card-body p-0">
+                    <label class="label">
+                      <span class="label-text font-medium">Start Date</span>
+                    </label>
+                    <div class="form-control">
+                      <input type="date" formControlName="startDate" class="input input-bordered h-12 w-full bg-base-100 focus:outline-primary/20 focus:outline-4">
+                    </div>
+                    <div class="text-error text-sm mt-1" *ngIf="reportForm.get('startDate')?.hasError('required')">
+                      Start date is required
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card bg-base-200 p-4 hover:bg-base-300 transition-colors">
+                  <div class="card-body p-0">
+                    <label class="label">
+                      <span class="label-text font-medium">End Date</span>
+                    </label>
+                    <div class="form-control">
+                      <input type="date" formControlName="endDate" class="input input-bordered h-12 w-full bg-base-100 focus:outline-primary/20 focus:outline-4">
+                    </div>
+                    <div class="text-error text-sm mt-1" *ngIf="reportForm.get('endDate')?.hasError('required')">
+                      End date is required
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Advanced Filters -->
+            <div class="card bg-base-200 p-4 hover:bg-base-300 transition-colors">
+              <div class="card-body p-0">
+                <div class="flex items-center justify-between mb-4">
+                  <label class="label">
+                    <span class="label-text font-medium">Advanced Filters</span>
+                  </label>
+                  <button type="button" 
+                          class="btn btn-sm btn-ghost"
+                          (click)="toggleAdvancedFilters()">
+                    <i data-feather="chevron-down" class="h-5 w-5"></i>
+                  </button>
+                </div>
+                <div class="space-y-4" *ngIf="showAdvancedFilters">
+                  <!-- Status Filter -->
+                  <div class="form-control">
+                    <label class="label">
+                      <span class="label-text font-medium">Status</span>
+                    </label>
+                    <select formControlName="status" multiple class="select select-bordered h-12 w-full bg-base-100 focus:outline-primary/20 focus:outline-4">
+                      <option value="completed">Completed</option>
+                      <option value="pending">Pending</option>
+                      <option value="failed">Failed</option>
+                    </select>
+                    <div class="text-sm text-base-content/70 mt-2">
+                      <i data-feather="info" class="h-4 w-4 inline-block mr-1"></i>
+                      Hold Ctrl/Cmd to select multiple statuses
+                    </div>
+                  </div>
+
+                  <!-- Agent Filter -->
+                  <div class="form-control" *ngIf="isAdmin">
+                    <label class="label">
+                      <span class="label-text font-medium">Agent</span>
+                    </label>
+                    <select formControlName="agentId" class="select select-bordered h-12 w-full bg-base-100 focus:outline-primary/20 focus:outline-4">
+                      <option value="">All Agents</option>
+                      <option *ngFor="let agent of agentProgress" [value]="agent.id">
+                        {{ agent.name }}
+                      </option>
+                    </select>
+                  </div>
+
+                  <!-- Custom Fields -->
+                  <div class="flex flex-wrap gap-4">
+                    <div class="form-control flex-1">
+                      <label class="label">
+                        <span class="label-text font-medium">Custom Field 1</span>
+                      </label>
+                      <input type="text" formControlName="customField1" class="input input-bordered h-12 w-full bg-base-100 focus:outline-primary/20 focus:outline-4" placeholder="Enter custom field 1">
+                    </div>
+                    <div class="form-control flex-1">
+                      <label class="label">
+                        <span class="label-text font-medium">Custom Field 2</span>
+                      </label>
+                      <input type="text" formControlName="customField2" class="input input-bordered h-12 w-full bg-base-100 focus:outline-primary/20 focus:outline-4" placeholder="Enter custom field 2">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Report Format -->
+            <div class="card bg-base-200 p-4 hover:bg-base-300 transition-colors">
+              <div class="card-body p-0">
+                <label class="label">
+                  <span class="label-text font-medium">Report Format</span>
+                </label>
+                <div class="form-control">
+                  <select formControlName="reportFormat" class="select select-bordered h-12 w-full bg-base-100 focus:outline-primary/20 focus:outline-4">
+                    <option value="pdf">PDF - Portable Document Format</option>
+                    <option value="excel">Excel - Microsoft Excel Spreadsheet</option>
+                    <option value="csv">CSV - Comma-Separated Values</option>
+                  </select>
+                </div>
+                <div class="text-sm text-base-content/70 mt-2">
+                  <i data-feather="info" class="h-4 w-4 inline-block mr-1"></i>
+                  Choose the format for your report
+                </div>
+              </div>
+            </div>
+
+            <!-- Include Details -->
+            <div class="card bg-base-200 p-4 hover:bg-base-300 transition-colors">
+              <div class="card-body p-0">
+                <div class="flex items-center gap-3">
+                  <input type="checkbox" formControlName="includeDetails" class="checkbox checkbox-primary">
+                  <span class="font-medium">Include Detailed Information</span>
+                  <div class="tooltip" data-tip="Includes additional metadata and detailed records in the report">
+                    <i data-feather="info" class="h-4 w-4 text-base-content/50"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Schedule Report -->
+            <div class="card bg-base-200 p-4 hover:bg-base-300 transition-colors">
+              <div class="card-body p-0">
+                <div class="flex items-center gap-3">
+                  <input type="checkbox" formControlName="scheduleReport" class="checkbox checkbox-primary">
+                  <span class="font-medium">Schedule Report</span>
+                  <div class="tooltip" data-tip="Set up automatic report generation">
+                    <i data-feather="info" class="h-4 w-4 text-base-content/50"></i>
+                  </div>
+                </div>
+                <div class="mt-4 space-y-4" *ngIf="reportForm.get('scheduleReport')?.value">
+                  <div class="form-control">
+                    <label class="label">
+                      <span class="label-text font-medium">Schedule Frequency</span>
+                    </label>
+                    <select formControlName="scheduleFrequency" class="select select-bordered h-12 w-full bg-base-100 focus:outline-primary/20 focus:outline-4">
+                      <option value="daily">Daily</option>
+                      <option value="weekly">Weekly</option>
+                      <option value="monthly">Monthly</option>
+                    </select>
+                  </div>
+                  <div class="form-control">
+                    <label class="label">
+                      <span class="label-text font-medium">Delivery Method</span>
+                    </label>
+                    <select formControlName="deliveryMethod" multiple class="select select-bordered h-12 w-full bg-base-100 focus:outline-primary/20 focus:outline-4">
+                      <option value="email">Email</option>
+                      <option value="download">Download</option>
+                      <option value="api">API</option>
+                    </select>
+                    <div class="text-sm text-base-content/70 mt-2">
+                      <i data-feather="info" class="h-4 w-4 inline-block mr-1"></i>
+                      Hold Ctrl/Cmd to select multiple delivery methods
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Report Preview -->
+            <div class="card bg-base-200 p-4 hover:bg-base-300 transition-colors" *ngIf="showPreview">
+              <div class="card-body p-0">
+                <div class="flex items-center justify-between mb-4">
+                  <h3 class="font-medium">Report Preview</h3>
+                  <button type="button" class="btn btn-sm btn-ghost" (click)="togglePreview()">
+                    <i data-feather="x" class="h-5 w-5"></i>
+                  </button>
+                </div>
+                <div class="bg-base-100 rounded-box p-4">
+                  <div class="space-y-2">
+                    <div class="flex justify-between">
+                      <span class="text-base-content/70">Report Type:</span>
+                      <span class="font-medium">{{ getSelectedReportType()?.label }}</span>
+                    </div>
+                    <div class="flex justify-between" *ngIf="reportForm.get('reportType')?.value === 'custom'">
+                      <span class="text-base-content/70">Date Range:</span>
+                      <span class="font-medium">{{ formatDateRange() }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span class="text-base-content/70">Format:</span>
+                      <span class="font-medium">{{ reportForm.get('reportFormat')?.value | uppercase }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span class="text-base-content/70">Details:</span>
+                      <span class="font-medium">{{ reportForm.get('includeDetails')?.value ? 'Included' : 'Excluded' }}</span>
+                    </div>
+                    <div class="flex justify-between" *ngIf="reportForm.get('scheduleReport')?.value">
+                      <span class="text-base-content/70">Schedule:</span>
+                      <span class="font-medium">{{ reportForm.get('scheduleFrequency')?.value | titlecase }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex justify-end gap-4">
+              <button type="button" 
+                      class="btn btn-outline btn-lg gap-2" 
+                      (click)="togglePreview()"
+                      [disabled]="!reportForm.valid">
+                <i data-feather="eye" class="h-5 w-5"></i>
+                Preview
+              </button>
+              <button class="btn btn-primary btn-lg gap-2" 
+                      type="submit" 
+                      [disabled]="!reportForm.valid || isGenerating">
+                <i data-feather="file-text" class="h-5 w-5" *ngIf="!isGenerating"></i>
+                <div class="loading loading-spinner loading-sm" *ngIf="isGenerating"></div>
+                <span>{{ isGenerating ? 'Generating...' : 'Generate Report' }}</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Export History -->
+      <div class="lg:col-span-1">
+        <div class="bg-base-100 rounded-box shadow-lg border border-base-200 p-8">
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="text-xl font-bold text-base-content">Recent Exports</h2>
+            <button class="btn btn-sm btn-ghost" (click)="refreshExports()">
+              <i data-feather="refresh-cw" class="h-4 w-4"></i>
+            </button>
+          </div>
+          <div class="space-y-4">
+            <div *ngFor="let export of recentExports" 
+                 class="card bg-base-200 p-4 hover:bg-base-300 transition-colors">
+              <div class="card-body p-0">
+                <div class="flex items-center justify-between mb-2">
+                  <div class="flex items-center gap-2">
+                    <i data-feather="file-text" class="h-5 w-5 text-primary"></i>
+                    <span class="font-medium">{{ export.type }}</span>
+                  </div>
+                  <span class="text-sm text-base-content/70">{{ export.date | date:'short' }}</span>
+                </div>
+                <div class="text-sm text-base-content/70">
+                  {{ export.description }}
+                </div>
+                <div class="flex justify-end gap-2 mt-4">
+                  <button class="btn btn-sm btn-ghost gap-2" (click)="downloadExport(export)">
+                    <i data-feather="download" class="h-5 w-5"></i>
+                    Download
+                  </button>
+                  <button class="btn btn-sm btn-ghost gap-2" (click)="resendExport(export)">
+                    <i data-feather="send" class="h-5 w-5"></i>
+                    Resend
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="recentExports.length === 0" class="text-center py-8">
+              <i data-feather="file-text" class="h-12 w-12 text-base-content/30 mx-auto"></i>
+              <p class="text-base-content/70 mt-2">No recent exports</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <app-footer></app-footer>
+</div> 

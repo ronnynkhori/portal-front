@@ -1,8 +1,22 @@
-import { Route } from '@angular/router';
+import { Routes } from '@angular/router';
+import { AgentHomeComponent } from './agent-home/agent-home.component';
+import { SimTransferComponent, ReportsComponent, RegistrationsComponent } from '@btc/shared/kyc';
 
-export const agentRoutes: Route[] = [
+export const agentRoutes: Routes = [
   {
     path: '',
-    loadComponent: () => import('./agent-home/agent-home.component').then(m => m.AgentHomeComponent)
+    component: AgentHomeComponent
+  },
+  {
+    path: 'sim-transfer',
+    component: SimTransferComponent
+  },
+  {
+    path: 'reports',
+    component: ReportsComponent
+  },
+  {
+    path: 'registrations',
+    component: RegistrationsComponent
   }
 ]; 

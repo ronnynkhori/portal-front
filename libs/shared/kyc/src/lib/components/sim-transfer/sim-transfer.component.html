@@ -1,0 +1,172 @@
+<!-- Main Container with Gradient Background -->
+<div class="min-h-screen bg-gray-50">
+  <!-- Header -->
+  <header class="bg-green-700 shadow-lg fixed top-0 left-0 right-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <img src="https://kyc.btc.bw/sim/assets/logo/coat.png" alt="BTC Logo" class="h-10 w-auto" />
+          <div>
+            <h1 class="text-2xl font-semibold text-white">SIM Transfer</h1>
+            <p class="text-sm text-green-100">Transfer SIM Card Ownership</p>
+          </div>
+        </div>
+        <button (click)="goBack()" class="flex items-center gap-2 text-white hover:text-green-100 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+          </svg>
+          Back to Dashboard
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Decorative Background Elements -->
+  <div class="absolute inset-0 overflow-hidden pointer-events-none">
+    <!-- Top-right gradient blob -->
+    <div class="absolute -top-[40%] -right-[20%] w-[80%] h-[80%] rounded-full bg-gradient-to-br from-primary/5 via-primary/3 to-transparent blur-3xl gradient-blob-1"></div>
+    <!-- Bottom-left gradient blob -->
+    <div class="absolute -bottom-[40%] -left-[20%] w-[80%] h-[80%] rounded-full bg-gradient-to-tr from-base-300/10 via-primary/3 to-transparent blur-3xl gradient-blob-2"></div>
+  </div>
+
+  <!-- Content -->
+  <div class="container mx-auto px-4 lg:px-8 pt-24 pb-12 relative">
+    <div class="max-w-3xl mx-auto">
+      <!-- Main Form Section -->
+      <mat-stepper class="bg-gradient-to-br from-base-100 to-base-100/98 backdrop-blur-sm rounded-lg shadow-sm border border-base-200" #stepper [linear]="true">
+        
+        <!-- Step 1: SIM Details -->
+        <mat-step [stepControl]="simDetailsForm">
+          <ng-template matStepLabel>SIM Details</ng-template>
+          <form [formGroup]="simDetailsForm" class="p-6 form-section">
+            <div class="space-y-6">
+              <!-- Form Title -->
+              <div class="text-center">
+                <h3 class="text-xl font-medium">Current SIM Details</h3>
+                <p class="text-sm text-base-content/60 mt-1">Please provide the current SIM card information</p>
+              </div>
+
+              <!-- SIM Number -->
+              <div class="form-control w-full">
+                <label class="text-sm font-medium mb-2 block">SIM Number *</label>
+                <input type="text" formControlName="simNumber" 
+                       class="input input-bordered h-12 w-full bg-base-100 focus:outline-primary/20 focus:outline-4" 
+                       placeholder="Enter SIM card number" />
+                <div class="text-xs text-base-content/60 mt-1">
+                  The SIM number can be found on the SIM card
+                </div>
+              </div>
+
+              <!-- Current Owner Name -->
+              <div class="form-control w-full">
+                <label class="text-sm font-medium mb-2 block">Current Owner Name *</label>
+                <input type="text" formControlName="currentOwnerName" 
+                       class="input input-bordered h-12 w-full bg-base-100 focus:outline-primary/20 focus:outline-4" 
+                       placeholder="Enter current owner's full name" />
+              </div>
+
+              <!-- Current Owner ID -->
+              <div class="form-control w-full">
+                <label class="text-sm font-medium mb-2 block">Current Owner ID Number *</label>
+                <input type="text" formControlName="currentOwnerID" 
+                       class="input input-bordered h-12 w-full bg-base-100 focus:outline-primary/20 focus:outline-4" 
+                       placeholder="Enter current owner's ID number" />
+              </div>
+
+              <!-- Phone Number -->
+              <div class="form-control w-full">
+                <label class="text-sm font-medium mb-2 block">Phone Number *</label>
+                <input type="tel" formControlName="phoneNumber" 
+                       class="input input-bordered h-12 w-full bg-base-100 focus:outline-primary/20 focus:outline-4" 
+                       placeholder="Enter associated phone number" />
+              </div>
+
+              <!-- Verify Button -->
+              <div class="mt-8">
+                <button type="button" 
+                        class="btn btn-primary w-full h-12 relative overflow-hidden" 
+                        [disabled]="!simDetailsForm.valid || isVerifying"
+                        (click)="verifySIMDetails()">
+                  <span class="relative z-10 flex items-center justify-center gap-2">
+                    <span class="loading loading-spinner loading-xs" *ngIf="isVerifying"></span>
+                    <span>Verify SIM Details</span>
+                  </span>
+                  <div class="absolute inset-0 bg-white/20 transform -skew-x-12 transition-transform hover:translate-x-full duration-700"></div>
+                </button>
+              </div>
+            </div>
+          </form>
+        </mat-step>
+
+        <!-- Step 2: Transfer Details -->
+        <mat-step [stepControl]="transferDetailsForm">
+          <ng-template matStepLabel>Transfer Details</ng-template>
+          <form [formGroup]="transferDetailsForm" (ngSubmit)="onSubmit()" class="p-6 form-section">
+            <div class="space-y-6">
+              <div class="text-center">
+                <h3 class="text-xl font-medium">New Owner Details</h3>
+                <p class="text-sm text-base-content/60 mt-1">Enter the details of the new SIM card owner</p>
+              </div>
+
+              <!-- New Owner Name -->
+              <div class="form-control w-full">
+                <label class="text-sm font-medium mb-2 block">New Owner Name *</label>
+                <input type="text" formControlName="newOwnerName" 
+                       class="input input-bordered h-12 w-full bg-base-100 focus:outline-primary/20 focus:outline-4" 
+                       placeholder="Enter new owner's full name" />
+              </div>
+
+              <!-- New Owner ID -->
+              <div class="form-control w-full">
+                <label class="text-sm font-medium mb-2 block">New Owner ID Number *</label>
+                <input type="text" formControlName="newOwnerID" 
+                       class="input input-bordered h-12 w-full bg-base-100 focus:outline-primary/20 focus:outline-4" 
+                       placeholder="Enter new owner's ID number" />
+              </div>
+
+              <!-- New Phone Number -->
+              <div class="form-control w-full">
+                <label class="text-sm font-medium mb-2 block">New Phone Number *</label>
+                <input type="tel" formControlName="newPhoneNumber" 
+                       class="input input-bordered h-12 w-full bg-base-100 focus:outline-primary/20 focus:outline-4" 
+                       placeholder="Enter new contact number" />
+              </div>
+
+              <!-- Transfer Reason -->
+              <div class="form-control w-full">
+                <label class="text-sm font-medium mb-2 block">Reason for Transfer *</label>
+                <select formControlName="transferReason" 
+                        class="select select-bordered h-12 w-full bg-base-100 focus:outline-primary/20 focus:outline-4">
+                  <option value="">Select a reason</option>
+                  <option value="sale">Sale of SIM</option>
+                  <option value="gift">Gift Transfer</option>
+                  <option value="family">Family Transfer</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+
+              <!-- Navigation -->
+              <div class="mt-8 flex flex-col sm:flex-row gap-3">
+                <button type="button" class="btn btn-outline w-full sm:w-auto min-w-[160px] h-12" mat-button matStepperPrevious>
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 mr-1">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                  </svg>
+                  Back
+                </button>
+                <button type="submit" 
+                        class="btn btn-primary w-full sm:flex-1 h-12 relative overflow-hidden" 
+                        [disabled]="!transferDetailsForm.valid || isSubmitting">
+                  <span class="relative z-10 flex items-center justify-center gap-2">
+                    <span class="loading loading-spinner loading-xs" *ngIf="isSubmitting"></span>
+                    <span>Complete Transfer</span>
+                  </span>
+                  <div class="absolute inset-0 bg-white/20 transform -skew-x-12 transition-transform hover:translate-x-full duration-700"></div>
+                </button>
+              </div>
+            </div>
+          </form>
+        </mat-step>
+      </mat-stepper>
+    </div>
+  </div>
+</div> 

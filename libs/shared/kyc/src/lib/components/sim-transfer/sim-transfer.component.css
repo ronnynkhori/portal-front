@@ -1,0 +1,69 @@
+/* Gradient animation for background blobs */
+.gradient-blob-1 {
+  animation: move1 10s infinite linear;
+}
+
+.gradient-blob-2 {
+  animation: move2 15s infinite linear;
+}
+
+@keyframes move1 {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate(50px, 20px) rotate(180deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(360deg);
+  }
+}
+
+@keyframes move2 {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate(-30px, -20px) rotate(-180deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(-360deg);
+  }
+}
+
+/* Form section styling */
+.form-section {
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Stepper customization */
+::ng-deep .mat-step-header {
+  padding: 24px !important;
+}
+
+::ng-deep .mat-step-header .mat-step-icon {
+  background-color: #22c55e !important;
+}
+
+::ng-deep .mat-step-header .mat-step-icon-selected {
+  background-color: #15803d !important;
+}
+
+::ng-deep .mat-step-header .mat-step-label {
+  color: #374151 !important;
+}
+
+::ng-deep .mat-stepper-horizontal-line {
+  border-top-color: #e5e7eb !important;
+} 
