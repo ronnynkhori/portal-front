@@ -1,0 +1,16 @@
+<div class="flex h-screen bg-gray-50">
+  <!-- Sidebar -->
+  <app-admin-sidebar class="flex-shrink-0"></app-admin-sidebar>
+
+  <!-- Main Content -->
+  <div class="flex-1 flex flex-col overflow-hidden">
+
+    <!-- Scrollable Content Area -->
+    <main class="flex-1 overflow-y-auto">
+      <router-outlet></router-outlet>
+    </main>
+
+    <!-- Footer -->
+    <app-admin-footer></app-admin-footer>
+  </div>
+</div>

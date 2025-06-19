@@ -1,0 +1,11 @@
+<div class="flex h-screen bg-gray-50">
+  <app-admin-sidebar
+    [adminName]="adminName"
+    [adminId]="adminId"
+    [adminInitials]="adminInitials"
+    class="h-full"
+  ></app-admin-sidebar>
+  <div class="flex-1 overflow-auto">
+    <router-outlet></router-outlet>
+  </div>
+</div> 

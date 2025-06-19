@@ -1,25 +1,25 @@
 <!-- Main Container with Gradient Background -->
 <div class="min-h-screen bg-gray-50">
   <!-- Header -->
-  <header class="bg-green-700 shadow-lg fixed top-0 left-0 right-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center gap-4">
-          <img src="https://kyc.btc.bw/sim/assets/logo/coat.png" alt="BTC Logo" class="h-10 w-auto" />
-          <div>
-            <h1 class="text-2xl font-semibold text-white">Complete KYC</h1>
-            <p class="text-sm text-green-100">Know Your Customer Verification</p>
-          </div>
-        </div>
-        <button (click)="goBack()" class="flex items-center gap-2 text-white hover:text-green-100 transition-colors">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
-          </svg>
-          Back to Dashboard
-        </button>
-      </div>
-    </div>
-  </header>
+<!--  <header class="bg-green-700 shadow-lg fixed top-0 left-0 right-0 z-50">-->
+<!--    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">-->
+<!--      <div class="flex items-center justify-between">-->
+<!--        <div class="flex items-center gap-4">-->
+<!--          <img src="https://kyc.btc.bw/sim/assets/logo/coat.png" alt="BTC Logo" class="h-10 w-auto" />-->
+<!--          <div>-->
+<!--            <h1 class="text-2xl font-semibold text-white">Complete KYC</h1>-->
+<!--            <p class="text-sm text-green-100">Know Your Customer Verification</p>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <button (click)="goBack()" class="flex items-center gap-2 text-white hover:text-green-100 transition-colors">-->
+<!--          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">-->
+<!--            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />-->
+<!--          </svg>-->
+<!--          Back to Dashboard-->
+<!--        </button>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </header>-->
 
   <!-- Decorative Background Elements -->
   <div class="absolute inset-0 overflow-hidden pointer-events-none">
@@ -30,11 +30,14 @@
   </div>
 
   <!-- Content -->
-  <div class="container mx-auto px-4 lg:px-8 pt-24 pb-12 relative">
+  <div class="container mx-auto px-4 lg:px-8 pt-24 pb-12 relative mt-5">
     <div class="max-w-3xl mx-auto">
       <!-- Main Form Section -->
       <mat-stepper class="bg-gradient-to-br from-base-100 to-base-100/98 backdrop-blur-sm rounded-lg shadow-sm border border-base-200" #stepper [linear]="true">
-        
+
+        <img src="https://kyc.btc.bw/sim/assets/logo/coat.png" alt="BTC Logo" class="h-10 w-auto mx-auto mt-6 mb-4" />
+
+
         <!-- Step 1: Initial Verification -->
         <mat-step [stepControl]="initialVerificationForm">
           <ng-template matStepLabel>Initial Verification</ng-template>
@@ -94,12 +97,22 @@
 
               <!-- Phone Number -->
               <div class="form-control w-full" *ngIf="selectedOtpMethod === 'sms'">
+                <label class="text-sm font-medium mb-2 block">Document Number *</label>
+                <div class="flex gap-3">
+                  <input type="tel" formControlName="documentNumber"
+                         class="input input-bordered flex-1 h-12 bg-base-100 focus:outline-primary/20 focus:outline-4"
+                         placeholder="Document number"  />
+                </div>
+              </div>
+
+              <!-- Phone Number -->
+              <div class="form-control w-full" *ngIf="selectedOtpMethod === 'sms'">
                 <label class="text-sm font-medium mb-2 block">Mobile Number *</label>
                 <div class="flex gap-3">
-                  <input type="tel" formControlName="phoneNumber" 
-                         class="input input-bordered flex-1 h-12 bg-base-100 focus:outline-primary/20 focus:outline-4" 
-                         placeholder="Enter your mobile number" />
-                  <button type="button" 
+                  <input type="tel" formControlName="phoneNumber"
+                         class="input input-bordered flex-1 h-12 bg-base-100 focus:outline-primary/20 focus:outline-4"
+                         placeholder="Enter mobile/modem number" inputmode="numeric" />
+                  <button type="button"
                           class="btn btn-primary h-12 min-w-[120px]"
                           [disabled]="!initialVerificationForm.get('phoneNumber')?.valid || isRequestingOtp"
                           (click)="requestOtp()">
@@ -114,10 +127,9 @@
               <div class="form-control w-full" *ngIf="selectedOtpMethod === 'email'">
                 <label class="text-sm font-medium mb-2 block">Email Address *</label>
                 <div class="flex gap-3">
-                  <input type="email" formControlName="email" 
-                         class="input input-bordered flex-1 h-12 bg-base-100 focus:outline-primary/20 focus:outline-4" 
+                  <input type="email" formControlName="email" class="input input-bordered flex-1 h-12 bg-base-100 focus:outline-primary/20 focus:outline-4"
                          placeholder="Enter your email address" />
-                  <button type="button" 
+                  <button type="button"
                           class="btn btn-primary h-12 min-w-[120px]"
                           [disabled]="!initialVerificationForm.get('email')?.valid || isRequestingOtp"
                           (click)="requestOtp()">
@@ -132,14 +144,14 @@
               <div class="form-control w-full mt-6" *ngIf="isOtpSent">
                 <label class="text-sm font-medium mb-2 block">Enter 4-digit OTP *</label>
                 <div class="flex gap-3">
-                  <input type="text" formControlName="otp" 
-                         class="input input-bordered flex-1 h-12 bg-base-100 focus:outline-primary/20 focus:outline-4 text-center tracking-[1em] text-xl" 
+                  <input type="text" formControlName="otp"
+                         class="input input-bordered flex-1 h-12 bg-base-100 focus:outline-primary/20 focus:outline-4 text-center tracking-[1em] text-xl"
                          placeholder="••••"
                          maxlength="4"
                          minlength="4"
                          pattern="[0-9]*"
                          inputmode="numeric" />
-                  <button type="button" 
+                  <button type="button"
                           class="btn btn-outline h-12"
                           [disabled]="otpResendTimer > 0"
                           (click)="requestOtp()">
@@ -157,7 +169,7 @@
                 </div>
 
                 <!-- Verify OTP Button -->
-                <button type="button" 
+                <button type="button"
                         class="btn btn-primary w-full mt-4 h-12"
                         [disabled]="!initialVerificationForm.get('otp')?.valid || isVerifyingOtp"
                         (click)="verifyOtpAndProceed()"
@@ -177,8 +189,8 @@
 
               <!-- Navigation Button - Only show after OTP verification -->
               <div class="mt-8">
-                <button type="button" 
-                        class="btn btn-primary w-full h-12 relative overflow-hidden" 
+                <button type="button"
+                        class="btn btn-primary w-full h-12 relative overflow-hidden"
                         [disabled]="!initialVerificationForm.valid || !isOtpVerified"
                         (click)="proceedToNextStep()"
                         *ngIf="isOtpVerified">
@@ -212,9 +224,9 @@
                   </div>
                   <h4 class="text-lg font-medium">Secure Identity Verification</h4>
                   <p class="text-sm text-base-content/70">We use MetaMap to securely verify your identity. This process typically takes less than 5 minutes.</p>
-                  
-                  <button type="button" 
-                          class="btn btn-primary w-full sm:w-auto min-w-[200px] h-12 relative overflow-hidden" 
+
+                  <button type="button"
+                          class="btn btn-primary w-full sm:w-auto min-w-[200px] h-12 relative overflow-hidden"
                           (click)="startMetaMapVerification()">
                     <span class="relative z-10 flex items-center justify-center gap-2">
                       <span>Start Verification</span>
@@ -235,8 +247,8 @@
                   </svg>
                   Back
                 </button>
-                <button type="button" 
-                        class="btn btn-primary w-full sm:flex-1 h-12 relative overflow-hidden" 
+                <button type="button"
+                        class="btn btn-primary w-full sm:flex-1 h-12 relative overflow-hidden"
                         [disabled]="!isMetaMapComplete"
                         mat-button matStepperNext>
                   <span class="relative z-10">Continue to Address Information</span>
@@ -260,8 +272,8 @@
               <!-- Physical Address -->
               <div class="form-control w-full">
                 <label class="text-sm font-medium mb-2 block">Physical Address *</label>
-                <textarea formControlName="physicalAddress" 
-                        class="textarea textarea-bordered w-full bg-base-100 focus:outline-primary/20 focus:outline-4 min-h-[100px]" 
+                <textarea formControlName="physicalAddress"
+                        class="textarea textarea-bordered w-full bg-base-100 focus:outline-primary/20 focus:outline-4 min-h-[100px]"
                         placeholder="Enter your complete physical address (e.g., Plot 1234, Main Street, Phase 2, Gaborone)"></textarea>
                 <div class="text-xs text-base-content/60 mt-1">
                   Please provide your complete physical address including plot number, street name, and location
@@ -271,8 +283,8 @@
               <!-- Postal Address -->
               <div class="form-control w-full">
                 <label class="text-sm font-medium mb-2 block">Postal Address *</label>
-                <input type="text" formControlName="postalAddress" 
-                       class="input input-bordered h-12 w-full bg-base-100 focus:outline-primary/20 focus:outline-4" 
+                <input type="text" formControlName="postalAddress"
+                       class="input input-bordered h-12 w-full bg-base-100 focus:outline-primary/20 focus:outline-4"
                        placeholder="Enter your postal address (e.g., P.O. Box 1234, Gaborone)" />
               </div>
 
@@ -280,7 +292,7 @@
               <div class="space-y-4">
                 <div class="flex items-center justify-between">
                   <label class="text-sm font-medium">Additional Contact Numbers</label>
-                  <button type="button" 
+                  <button type="button"
                           class="btn btn-sm btn-outline gap-2"
                           (click)="addNumber()">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
@@ -293,9 +305,9 @@
                 <div class="space-y-3" formArrayName="additionalNumbers">
                   <div *ngFor="let number of additionalNumbers.controls; let i = index" class="flex gap-3">
                     <input type="tel" [formControlName]="i"
-                           class="input input-bordered flex-1 h-12 bg-base-100 focus:outline-primary/20 focus:outline-4" 
+                           class="input input-bordered flex-1 h-12 bg-base-100 focus:outline-primary/20 focus:outline-4"
                            placeholder="Enter additional contact number" />
-                    <button type="button" 
+                    <button type="button"
                             class="btn btn-square btn-outline btn-error h-12 w-12"
                             (click)="removeNumber(i)">
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
@@ -318,8 +330,8 @@
                 </svg>
                 Back
               </button>
-              <button type="submit" 
-                      class="btn btn-primary w-full sm:flex-1 h-12 relative overflow-hidden" 
+              <button type="submit"
+                      class="btn btn-primary w-full sm:flex-1 h-12 relative overflow-hidden"
                       [disabled]="!addressForm.valid || isSubmitting">
                 <span class="relative z-10 flex items-center justify-center gap-2">
                   <span class="loading loading-spinner loading-xs" *ngIf="isSubmitting"></span>

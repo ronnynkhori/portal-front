@@ -1,0 +1,155 @@
+<div class="p-6">
+  <!-- Dashboard Header -->
+  <div class="mb-8">
+    <h1 class="text-2xl font-bold text-gray-800">Dashboard Overview</h1>
+    <p class="text-gray-600 mt-1">Welcome to your admin dashboard</p>
+  </div>
+
+  <!-- Dashboard Summary Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <!-- Total Natural Subscribers -->
+    <div class="bg-white rounded-lg border border-gray-200 p-6">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold text-gray-700">Total Natural Subscribers</h3>
+        <div class="p-2 bg-blue-50 rounded-md">
+          <i data-feather="users" class="w-5 h-5 text-blue-600"></i>
+        </div>
+      </div>
+      <p class="text-3xl font-bold text-blue-600 mb-2">
+        {{dashboardMetrics.totalNaturalSubscribers}}
+      </p>
+    </div>
+
+    <!-- New Subscribers Today -->
+    <div class="bg-white rounded-lg border border-gray-200 p-6">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold text-gray-700">New Subscribers Today</h3>
+        <div class="p-2 bg-green-50 rounded-md">
+          <i data-feather="user-plus" class="w-5 h-5 text-green-600"></i>
+        </div>
+      </div>
+      <p class="text-3xl font-bold text-green-600 mb-2">
+        {{dashboardMetrics.newSubscribersToday}}
+      </p>
+    </div>
+
+    <!-- Mobile Numbers Registered Today -->
+    <div class="bg-white rounded-lg border border-gray-200 p-6">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold text-gray-700">Mobile Numbers Registered Today</h3>
+        <div class="p-2 bg-indigo-50 rounded-md">
+          <i data-feather="smartphone" class="w-5 h-5 text-indigo-600"></i>
+        </div>
+      </div>
+      <p class="text-3xl font-bold text-indigo-600 mb-2">
+        {{dashboardMetrics.mobileNumbersRegisteredToday}}
+      </p>
+    </div>
+
+    <!-- Subscribers Verified Today -->
+    <div class="bg-white rounded-lg border border-gray-200 p-6">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold text-gray-700">Subscribers Verified Today</h3>
+        <div class="p-2 bg-teal-50 rounded-md">
+          <i data-feather="check-circle" class="w-5 h-5 text-teal-600"></i>
+        </div>
+      </div>
+      <p class="text-3xl font-bold text-teal-600 mb-2">
+        {{dashboardMetrics.subscribersVerifiedToday}}
+      </p>
+    </div>
+  </div>
+
+  <!-- Additional Metrics -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <!-- Billing Successes Today -->
+    <div class="bg-white rounded-lg border border-gray-200 p-6">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold text-gray-700">Billing Successes Today</h3>
+        <div class="p-2 bg-green-50 rounded-md">
+          <i data-feather="dollar-sign" class="w-5 h-5 text-green-600"></i>
+        </div>
+      </div>
+      <p class="text-3xl font-bold text-green-600 mb-2">
+        {{dashboardMetrics.billingSuccessesTodayCount}}
+      </p>
+    </div>
+
+    <!-- Billing Failures Today -->
+    <div class="bg-white rounded-lg border border-gray-200 p-6">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold text-gray-700">Billing Failures Today</h3>
+        <div class="p-2 bg-red-50 rounded-md">
+          <i data-feather="x-octagon" class="w-5 h-5 text-red-600"></i>
+        </div>
+      </div>
+      <p class="text-3xl font-bold text-red-600 mb-2">
+        {{dashboardMetrics.billingFailuresTodayCount}}
+      </p>
+    </div>
+
+    <!-- Verifications Failed Today -->
+    <div class="bg-white rounded-lg border border-gray-200 p-6">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold text-gray-700">Verifications Failed Today</h3>
+        <div class="p-2 bg-yellow-50 rounded-md">
+          <i data-feather="alert-triangle" class="w-5 h-5 text-yellow-600"></i>
+        </div>
+      </div>
+      <p class="text-3xl font-bold text-yellow-600 mb-2">
+        {{dashboardMetrics.subscriberVerificationsFailedToday}}
+      </p>
+    </div>
+  </div>
+
+  <!-- Charts Grid -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Subscriber Trends Chart -->
+    <div class="bg-white rounded-lg border border-gray-200 p-6">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold text-gray-700">Subscriber Trends</h3>
+        <div class="p-2 bg-blue-50 rounded-md">
+          <i data-feather="trending-up" class="w-5 h-5 text-blue-600"></i>
+        </div>
+      </div>
+      <div class="h-80">
+        <canvas baseChart
+          [data]="subscriberTrendsChart"
+          [options]="chartOptions"
+          type="line">
+        </canvas>
+      </div>
+    </div>
+
+    <!-- MSISDN State Distribution -->
+    <div class="bg-white rounded-lg border border-gray-200 p-6">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold text-gray-700">MSISDN State Distribution</h3>
+        <div class="p-2 bg-green-50 rounded-md">
+          <i data-feather="pie-chart" class="w-5 h-5 text-green-600"></i>
+        </div>
+      </div>
+      <div class="h-80 flex flex-col lg:flex-row gap-4">
+        <div class="flex-1 flex items-center justify-center">
+          <canvas baseChart
+            [data]="msisdnStateChart"
+            [options]="chartOptions"
+            type="doughnut">
+          </canvas>
+        </div>
+        <div class="flex flex-col justify-center gap-2 min-w-[160px]">
+          <div class="flex items-center gap-2">
+            <span class="inline-block w-3 h-3 rounded-full" style="background-color: #3B82F6;"></span>
+            <span class="font-medium text-gray-700">PREACTIVE:</span>
+            <span class="font-bold text-gray-900">{{ msisdnStateChart.labels?.[0] ? msisdnStateChart.datasets?.[0]?.data?.[0] : 0 }}</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="inline-block w-3 h-3 rounded-full" style="background-color: #10B981;"></span>
+            <span class="font-medium text-gray-700">ACTIVE:</span>
+            <span class="font-bold text-gray-900">{{ msisdnStateChart.labels?.[1] ? msisdnStateChart.datasets?.[0]?.data?.[1] : 0 }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

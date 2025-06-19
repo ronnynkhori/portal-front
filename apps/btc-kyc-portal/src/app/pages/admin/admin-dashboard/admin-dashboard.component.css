@@ -1,0 +1,96 @@
+/* Custom styles for charts */
+canvas {
+  width: 100% !important;
+  height: 300px !important;
+}
+
+/* Ensure chart containers maintain aspect ratio */
+.chart-container {
+  position: relative;
+  width: 100%;
+  min-height: 300px;
+}
+
+/* Card hover effects */
+.bg-white {
+  transition: all 0.3s ease;
+}
+
+.bg-white:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Chart animations */
+canvas {
+  transition: opacity 0.3s ease;
+}
+
+canvas:hover {
+  opacity: 0.95;
+}
+
+/* Number counter animation */
+.count-up {
+  display: inline-block;
+  transition: all 0.3s ease;
+}
+
+/* Icon animations */
+[data-feather] {
+  transition: transform 0.3s ease;
+}
+
+.bg-white:hover [data-feather] {
+  transform: scale(1.1);
+}
+
+/* Nationality list item hover effect */
+.hover\:bg-gray-100:hover {
+  transform: translateX(4px);
+}
+
+/* Chart container */
+.h-80 {
+  min-height: 320px;
+}
+
+/* Card header icons */
+.p-3 {
+  transition: all 0.3s ease;
+}
+
+.bg-white:hover .p-3 {
+  transform: rotate(5deg);
+}
+
+/* Text color transitions */
+.text-gray-700 {
+  transition: color 0.3s ease;
+}
+
+.bg-white:hover .text-gray-700 {
+  color: #1a202c;
+}
+
+/* Background color transitions */
+.bg-gray-50 {
+  transition: background-color 0.3s ease;
+}
+
+.bg-gray-50:hover {
+  background-color: #f3f4f6;
+}
+
+.loader {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3B82F6;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg);}
+  100% { transform: rotate(360deg);}
+} 

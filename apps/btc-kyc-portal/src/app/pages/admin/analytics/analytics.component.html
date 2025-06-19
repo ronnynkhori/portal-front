@@ -1,0 +1,32 @@
+<div class="p-6">
+  <h1 class="text-2xl font-bold mb-4">Analytics</h1>
+
+  <!-- Monthly Snapshot Card -->
+  <div class="mb-8">
+    <div class="bg-white rounded-lg border border-gray-200 p-6 w-full max-w-xl mx-auto">
+      <h2 class="text-lg font-semibold text-gray-700 mb-4">Monthly Snapshot ({{ currentMonth }})</h2>
+      <div *ngIf="isMonthlySummaryLoading" class="flex justify-center items-center h-24">
+        <span class="loader"></span>
+      </div>
+      <div *ngIf="!isMonthlySummaryLoading && monthlySummary" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="flex flex-col items-center">
+          <span class="text-gray-500 text-sm mb-1">Total Registered</span>
+          <span class="text-2xl font-bold text-blue-600">{{ monthlySummary.totalRegistered || 0 }}</span>
+        </div>
+        <div class="flex flex-col items-center">
+          <span class="text-gray-500 text-sm mb-1">Total Verified</span>
+          <span class="text-2xl font-bold text-green-600">{{ monthlySummary.totalVerified || 0 }}</span>
+        </div>
+        <div class="flex flex-col items-center">
+          <span class="text-gray-500 text-sm mb-1">Rejections</span>
+          <span class="text-2xl font-bold text-red-600">{{ monthlySummary.rejections || 0 }}</span>
+        </div>
+      </div>
+      <div *ngIf="!isMonthlySummaryLoading && !monthlySummary" class="text-center text-gray-400 py-6">
+        No data available for this month.
+      </div>
+    </div>
+  </div>
+
+  <!-- Add more analytics widgets below -->
+</div> 

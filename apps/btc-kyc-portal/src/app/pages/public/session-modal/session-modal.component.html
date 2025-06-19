@@ -1,76 +1,40 @@
-  <div class="modal-box relative bg-base-100 p-6 sm:p-8 w-11/12 max-w-2xl mx-auto">
+<dialog #modalRef class="modal">
+  <div class="modal-box w-11/12 max-w-2xl">
     <!-- Header -->
-    <div class="flex justify-between items-center mb-8">
-      <h3 class="text-2xl font-bold">{{serviceTitle}}</h3>
-      <button (click)="closeDialog()" class="btn btn-circle btn-ghost">
-        <i data-feather="x" class="h-5 w-5"></i>
-      </button>
+    <div class="flex justify-between items-center mb-6" *ngIf="currentStep !== 3">
+      <h3 class="font-bold text-lg">{{ serviceTitle }}</h3>
+      <button (click)="closeModal()" class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
     </div>
 
     <!-- Step 1: Document and Phone -->
     <div *ngIf="currentStep === 1" class="space-y-6">
       <form [formGroup]="verificationForm" (ngSubmit)="submitVerificationForm()">
-        <div class="space-y-6">
-          <!-- Document Number Input -->
-          <div class="form-control w-full">
-            <label class="label" for="documentNumber">
-              <span class="label-text text-base font-medium">Document Number</span>
-            </label>
-            <div class="relative">
-              <input
-                type="text"
-                inputmode="numeric"
-                pattern="[0-9]*"
-                id="documentNumber"
-                formControlName="documentNumber"
-                (keypress)="onKeyPress($event)"
-                class="input input-bordered w-full text-lg pl-12"
-                placeholder="Enter your document number"
-              >
-              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <i data-feather="file-text" class="h-5 w-5 text-gray-500"></i>
-              </div>
-            </div>
-            <div class="label-text-alt text-error mt-2" *ngIf="verificationForm.get('documentNumber')?.touched && verificationForm.get('documentNumber')?.errors?.['required']">
-              Document number is required
-            </div>
-          </div>
-
-          <!-- Phone Number Input -->
-          <div class="form-control w-full">
-            <label class="label" for="phoneNumber">
-              <span class="label-text text-base font-medium">Phone Number</span>
-            </label>
-            <div class="relative">
-              <input
-                type="tel"
-                inputmode="numeric"
-                pattern="[0-9]*"
-                id="phoneNumber"
-                formControlName="phoneNumber"
-                (keypress)="onKeyPress($event)"
-                class="input input-bordered w-full text-lg pl-12"
-                placeholder="Enter your phone number"
-              >
-              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <i data-feather="phone" class="h-5 w-5 text-gray-500"></i>
-              </div>
-            </div>
-            <div class="label-text-alt text-error mt-2" *ngIf="verificationForm.get('phoneNumber')?.touched && verificationForm.get('phoneNumber')?.errors?.['required']">
-              Phone number is required
+        <div class="form-control">
+          <label class="label" for="documentNumber">
+            <span class="label-text font-medium">Document Number</span>
+          </label>
+          <div class="relative">
+            <input type="text" id="documentNumber" inputmode="numeric" pattern="[0-9]*" class="input input-bordered w-full pl-12" formControlName="documentNumber" (keypress)="onKeyPress($event)" placeholder="Enter your document number">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <i data-feather="file-text" class="h-5 w-5 text-gray-500"></i>
             </div>
           </div>
         </div>
 
-        <div class="mt-8">
-          <button
-            type="submit"
-            [disabled]="verificationForm.invalid || isLoading"
-            class="btn btn-primary btn-lg w-full"
-            [class.loading]="isLoading"
-          >
-            Send OTP
-          </button>
+        <div class="form-control">
+          <label class="label" for="phoneNumber">
+            <span class="label-text font-medium">Phone Number</span>
+          </label>
+          <div class="relative">
+            <input type="tel" id="phoneNumber" inputmode="numeric" pattern="[0-9]*" class="input input-bordered w-full pl-12" formControlName="phoneNumber" (keypress)="onKeyPress($event)" placeholder="Enter your phone number">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <i data-feather="phone" class="h-5 w-5 text-gray-500"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-6">
+          <button type="submit" [disabled]="verificationForm.invalid" class="btn btn-primary w-full">Send OTP</button>
         </div>
       </form>
     </div>
@@ -78,72 +42,41 @@
     <!-- Step 2: OTP Verification -->
     <div *ngIf="currentStep === 2" class="space-y-6">
       <form [formGroup]="otpForm" (ngSubmit)="submitOtpForm()">
-        <div class="alert alert-info shadow-lg mb-6 p-4">
-          <i data-feather="info" class="h-8 w-8"></i>
+        <div class="border border-bottom border-primary mb-5 mx-2 w-100 p-2 rounded rounded-md">
           <div>
-            <h3 class="font-bold text-lg">Check your phone</h3>
-            <div class="text-sm">We've sent a 4-digit code to {{verificationForm.get('phoneNumber')?.value}}</div>
+            <h3 class="font-bold">Check your phone</h3>
+            <span class="text-sm">We've sent a 4-digit code to {{ verificationForm.get('phoneNumber')?.value }}</span>
           </div>
         </div>
-        
-        <div class="flex justify-center gap-4 my-8">
+
+        <div class="flex justify-center gap-4">
           <ng-container *ngFor="let i of [0,1,2,3]">
-            <input
-              type="number"
-              inputmode="numeric"
-              pattern="[0-9]*"
-              maxlength="1"
-              [id]="'digit' + i"
-              [formControlName]="'digit' + i"
-              (input)="onOtpInput($event, i)"
-              (keydown)="onOtpKeyDown($event, i)"
-              (keypress)="onKeyPress($event)"
-              class="input input-bordered w-16 h-16 text-center text-2xl font-bold shadow-sm"
-              [attr.aria-label]="'OTP digit ' + (i + 1)"
-            >
+            <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="input input-bordered w-16 h-16 text-center text-2xl font-bold" [id]="'digit' + i" [formControlName]="'digit' + i" (input)="onOtpInput($event, i)" (keydown)="onOtpKeyDown($event, i)" (keypress)="onKeyPress($event)">
           </ng-container>
         </div>
 
-        <div class="alert alert-error shadow-lg mt-4" *ngIf="otpError">
-          <i data-feather="alert-circle" class="h-6 w-6"></i>
-          <span>{{otpError}}</span>
+        <div class="alert alert-error mt-2" *ngIf="otpError">
+          <i data-feather="alert-circle" class="h-5 w-5"></i>
+          <span>{{ otpError }}</span>
         </div>
 
-        <div class="flex items-center justify-between mt-6">
-          <button
-            type="button"
-            (click)="resendOtp()"
-            [disabled]="resendTimer > 0"
-            class="btn btn-ghost"
-          >
-            <i data-feather="refresh-cw" class="h-4 w-4 mr-2"></i>
-            Resend OTP {{ resendTimer > 0 ? '(' + resendTimer + 's)' : '' }}
+        <div class="flex justify-between items-center mt-4">
+          <button type="button" class="btn btn-ghost" (click)="resendOtp()" [disabled]="resendTimer > 0">
+            <i data-feather="refresh-cw" class="h-4 w-4 mr-1"></i> Resend OTP {{ resendTimer > 0 ? '(' + resendTimer + 's)' : '' }}
           </button>
-          <button
-            type="button"
-            (click)="currentStep = 1"
-            class="btn btn-ghost"
-          >
-            <i data-feather="edit-2" class="h-4 w-4 mr-2"></i>
-            Change Number
+          <button type="button" class="btn btn-ghost" (click)="currentStep = 1">
+            <i data-feather="edit-2" class="h-4 w-4 mr-1"></i> Change Number
           </button>
         </div>
 
-        <div class="mt-8">
-          <button
-            type="submit"
-            [disabled]="!isOtpComplete() || isLoading"
-            class="btn btn-primary btn-lg w-full"
-            [class.loading]="isLoading"
-          >
-            Verify OTP
-          </button>
+        <div class="mt-6">
+          <button type="submit" [disabled]="!isOtpComplete() || isLoading"  class="btn btn-primary  w-full">Verify OTP</button>
         </div>
       </form>
     </div>
 
     <!-- Step 3: Success -->
-    <div *ngIf="currentStep === 3" class="text-center space-y-6 py-4">
+    <div *ngIf="currentStep === 3" class="text-center space-y-6 py-6">
       <div class="flex justify-center">
         <div class="avatar placeholder">
           <div class="bg-success text-success-content rounded-full w-24 h-24 flex items-center justify-center">
@@ -151,20 +84,12 @@
           </div>
         </div>
       </div>
-      <div class="space-y-2">
-        <h3 class="text-2xl font-bold">Verification Successful</h3>
-        <p class="text-base opacity-70">
-          You can now proceed with your selected service
-        </p>
-      </div>
-      <div class="mt-8">
-        <button
-          type="button"
-          (click)="onSuccess()"
-          class="btn btn-primary btn-lg w-full"
-        >
-          Continue
-        </button>
+      <h3 class="text-2xl font-bold">Verification Successful</h3>
+      <p>You can now proceed with your selected service.</p>
+      <div class="mt-6">
+        <button class="btn btn-primary w-full" (click)="closeModal()">Continue</button>
       </div>
     </div>
   </div>
+
+</dialog>

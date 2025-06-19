@@ -11,6 +11,8 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatRadioModule } from '@angular/material/radio';
 import { Router } from '@angular/router';
 import { Subscription, timer } from 'rxjs';
+import {SharedService} from "../../services/shared.service";
+import {SnackbarService} from "../../services/snackbar.service";
 
 interface Step {
   id: number;
@@ -89,13 +91,16 @@ export class CompleteKycComponent implements OnInit, OnDestroy {
 
   constructor(
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private sharedService: SharedService,
+    private snackbarService: SnackbarService
   ) {
     this.initializeForms();
   }
 
   ngOnInit(): void {
     this.checkKycStatus();
+
   }
 
   private checkKycStatus(): void {
@@ -113,7 +118,8 @@ export class CompleteKycComponent implements OnInit, OnDestroy {
   private initializeForms(): void {
     // Initialize Initial Verification Form
     this.initialVerificationForm = this.fb.group({
-      citizenshipStatus: ['', Validators.required],
+      citizenshipStatus: ['citizen', Validators.required],
+      documentNumber: ['', [Validators.required]],
       phoneNumber: ['', [Validators.required, Validators.pattern('^[0-9]{8}$')]], // Assuming 8 digit phone numbers
       email: ['', [Validators.email]], // Email is optional if SMS is selected
       otpMethod: ['sms', Validators.required],
@@ -132,7 +138,7 @@ export class CompleteKycComponent implements OnInit, OnDestroy {
       this.selectedOtpMethod = method;
       const emailControl = this.initialVerificationForm.get('email');
       const phoneControl = this.initialVerificationForm.get('phoneNumber');
-      
+
       if (method === 'email') {
         emailControl?.setValidators([Validators.required, Validators.email]);
         phoneControl?.clearValidators();
@@ -142,7 +148,7 @@ export class CompleteKycComponent implements OnInit, OnDestroy {
         emailControl?.clearValidators();
         emailControl?.setValidators([Validators.email]);
       }
-      
+
       emailControl?.updateValueAndValidity();
       phoneControl?.updateValueAndValidity();
     });
@@ -164,24 +170,41 @@ export class CompleteKycComponent implements OnInit, OnDestroy {
   }
 
   // OTP Functions
-  async requestOtp(): Promise<void> {
+  requestOtp() {
+
     try {
       this.isRequestingOtp = true;
       const method = this.initialVerificationForm.get('otpMethod')?.value;
-      const destination = method === 'sms' 
+      const destination = method === 'sms'
         ? this.initialVerificationForm.get('phoneNumber')?.value
         : this.initialVerificationForm.get('email')?.value;
 
+      const payload = {
+        msisdn: this.initialVerificationForm.get('phoneNumber')?.value,
+        documentNumber: this.initialVerificationForm.get('documentNumber')?.value
+      };
+
       // Implement OTP request logic here based on method
-      // if (method === 'sms') {
-      //   await this.otpService.requestSmsOtp(destination);
-      // } else {
-      //   await this.otpService.requestEmailOtp(destination);
-      // }
-      
+      if (method === 'sms') {
+        this.sharedService.getNaturalSubscriberByMsisdnAndDocumentNumber(payload).subscribe(
+          {
+            next: (response: any) => {
+              console.log('OTP sent successfully' ,response);
+              this.snackbarService.success('OTP sent successfully', 'Success');
+            },
+            error: (error) => {
+              console.error('Error sending OTP:', error);
+              // Handle error (e.g., show an error message)
+              this.snackbarService.error('Error sending OTP', 'Error');
+            }
+          }
+        )
+      } else {
+       this.sharedService.requestSmsOtp(destination);
+      }
+
       // Simulate OTP send
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
+
       this.isOtpSent = true;
       this.startOtpResendTimer();
     } catch (error) {
@@ -210,16 +233,16 @@ export class CompleteKycComponent implements OnInit, OnDestroy {
       this.isVerifyingOtp = true;
       const otp = this.initialVerificationForm.get('otp')?.value;
       const method = this.initialVerificationForm.get('otpMethod')?.value;
-      const destination = method === 'sms' 
+      const destination = method === 'sms'
         ? this.initialVerificationForm.get('phoneNumber')?.value
         : this.initialVerificationForm.get('email')?.value;
 
       // Implement OTP verification logic here
       // const isValid = await this.otpService.verifyOtp(otp, method, destination);
-      
+
       // Simulate OTP verification
       await new Promise(resolve => setTimeout(resolve, 1500));
-      
+
       this.isOtpVerified = true;
     } catch (error) {
       console.error('Error verifying OTP:', error);
@@ -242,10 +265,10 @@ export class CompleteKycComponent implements OnInit, OnDestroy {
     try {
       // Implement MetaMap verification logic here
       // const result = await this.metaMapService.startVerification();
-      
+
       // Simulate MetaMap verification
       await new Promise(resolve => setTimeout(resolve, 2000));
-      
+
       this.isMetaMapComplete = true;
       this.steps[1].status = 'complete';
       this.steps[2].status = 'active';
@@ -266,10 +289,10 @@ export class CompleteKycComponent implements OnInit, OnDestroy {
           ...this.initialVerificationForm.value,
           ...this.addressForm.value
         };
-        
+
         // Simulate API submission
         await new Promise(resolve => setTimeout(resolve, 2000));
-        
+
         this.steps[2].status = 'complete';
         this.kycStatus = {
           isValid: true,
@@ -294,4 +317,4 @@ export class CompleteKycComponent implements OnInit, OnDestroy {
       this.otpTimerSubscription.unsubscribe();
     }
   }
-} 
+}

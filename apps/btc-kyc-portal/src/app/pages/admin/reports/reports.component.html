@@ -1,0 +1,27 @@
+<div class="p-6">
+  <h1 class="text-2xl font-bold mb-4">Reports</h1>
+
+  <div class="mb-8">
+    <h2 class="text-lg font-semibold mb-2">Top Nationalities (Last 30 Days)</h2>
+    <div *ngIf="isLoading" class="flex justify-center items-center h-24">
+      <span class="loader"></span>
+    </div>
+    <table *ngIf="!isLoading && topNationalities.length" class="min-w-full bg-white border border-gray-200 rounded">
+      <thead>
+        <tr>
+          <th class="px-4 py-2 border-b">Nationality</th>
+          <th class="px-4 py-2 border-b">Count</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let n of topNationalities">
+          <td class="px-4 py-2 border-b">{{ n.name }}</td>
+          <td class="px-4 py-2 border-b">{{ n.count }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <div *ngIf="!isLoading && !topNationalities.length" class="text-gray-400 py-6 text-center">
+      No data available.
+    </div>
+  </div>
+</div> 

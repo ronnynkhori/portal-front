@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, AfterViewInit, NgZone, Inject } from '@angular/core';
+import {Component, OnDestroy, OnInit, AfterViewInit, NgZone, Inject, ViewChild, ElementRef} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -6,14 +6,11 @@ import { Router } from '@angular/router';
 import * as feather from 'feather-icons';
 import { ServiceType } from '../public-home/public-home.component';
 
-interface DialogData {
-  serviceType: ServiceType;
-}
 
 @Component({
   selector: 'app-session-modal',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatDialogModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './session-modal.component.html',
   styleUrls: ['./session-modal.component.css']
 })
@@ -26,6 +23,7 @@ export class SessionModalComponent implements OnInit, AfterViewInit, OnDestroy {
   verificationForm: FormGroup;
   otpForm: FormGroup;
   private resendTimerInterval: any;
+  @ViewChild('modalRef') modalRef!: ElementRef<HTMLDialogElement>;
 
   // Service type related properties
   serviceType: ServiceType;
@@ -49,13 +47,11 @@ export class SessionModalComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(
     private fb: FormBuilder,
-    private dialogRef: MatDialogRef<SessionModalComponent>,
     private ngZone: NgZone,
-    private router: Router,
-    @Inject(MAT_DIALOG_DATA) private data: DialogData
+    private router: Router
   ) {
-    this.serviceType = this.data?.serviceType || 'kyc';
-    
+    this.serviceType = 'kyc'; // Default service type
+
     this.verificationForm = this.fb.group({
       documentNumber: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
       phoneNumber: ['', [Validators.required, Validators.pattern('^[0-9]+$')]]
@@ -98,9 +94,12 @@ export class SessionModalComponent implements OnInit, AfterViewInit, OnDestroy {
       clearInterval(this.resendTimerInterval);
     }
   }
+  openModal(): void {
+    this.modalRef.nativeElement.showModal();
+  }
 
-  closeDialog(): void {
-    this.dialogRef.close();
+  closeModal(): void {
+    this.modalRef.nativeElement.close();
   }
 
   submitVerificationForm(): void {
@@ -123,6 +122,7 @@ export class SessionModalComponent implements OnInit, AfterViewInit, OnDestroy {
         this.isLoading = false;
         this.currentStep = 3;
       }, 1500);
+      this.onSuccess();
     }
   }
 
@@ -191,10 +191,10 @@ export class SessionModalComponent implements OnInit, AfterViewInit, OnDestroy {
   onSuccess(): void {
     const route = this.serviceRoutes[this.serviceType];
     if (route) {
-      this.closeDialog();
+      this.closeModal()
       this.router.navigate([route]);
     } else {
-      this.closeDialog();
+      this.closeModal()
     }
   }
-} 
+}

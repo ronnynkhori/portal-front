@@ -1,7 +1,7 @@
 import { Route } from '@angular/router';
 import { MainLayoutComponent } from './layout/main-layout/main-layout.component';
-import { AdminLayoutComponent } from './layout/admin-layout/admin-layout.component';
 import { AgentLayoutComponent } from './layout/agent-layout/agent-layout.component';
+import { adminRoutes } from './pages/admin/admin.routes';
 import { Component } from '@angular/core';
 import { CompleteKycComponent, RegistrationsComponent, ReportsComponent, SimRegistrationComponent, SimTransferComponent } from '@btc/kyc';
 
@@ -58,31 +58,7 @@ export const appRoutes: Route[] = [
   },
   {
     path: 'admin',
-    component: AdminLayoutComponent,
-    children: [
-      {
-        path: '',
-        redirectTo: 'dashboard',
-        pathMatch: 'full'
-      },
-      // Use our new AdminHomeComponent for the dashboard
-      {
-        path: 'dashboard',
-        loadComponent: () => import('./pages/admin/admin-home/admin-home.component').then(m => m.AdminHomeComponent)
-      },
-      {
-        path: 'agents',
-        component: PlaceholderComponent
-      },
-      {
-        path: 'kyc',
-        component: PlaceholderComponent
-      },
-      {
-        path: 'reports',
-        component: PlaceholderComponent
-      }
-    ]
+    children: adminRoutes
   },
   
   // Agent portal section
@@ -107,7 +83,6 @@ export const appRoutes: Route[] = [
         path: 'sim-registration',
         component: SimRegistrationComponent
       },
- 
       {
         path: 'sim-transfer',
         component: SimTransferComponent
